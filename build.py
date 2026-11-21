@@ -134,7 +134,8 @@ html.go .hero .hi{animation:up .75s cubic-bezier(.2,.7,.2,1) both;animation-dela
 .hero.v2{--mx:70%;--my:20%;background-image:radial-gradient(520px circle at var(--mx) var(--my),var(--glow),transparent 65%)}
 #sprog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));z-index:60}
 .chip,.btn{transition:transform .2s,background .2s,border-color .2s}.btn:hover{transform:translateY(-2px)}
-@media (prefers-reduced-motion:reduce){.js .rv,.hero .hi{opacity:1!important;transform:none!important;transition:none;animation:none!important}.photo .cat{animation:none}.card:hover,.btn:hover{transform:none}}
+@keyframes upf{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.js .rv,.hero .hi{transform:none!important}html.go .hero .hi{animation-name:upf!important}.photo .cat{animation:none}.card:hover,.btn:hover{transform:none}}
 .ships{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:18px 20px 12px;margin-top:14px}
 .sbar{height:3px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:14px}.sbar i{display:block;height:100%;width:25%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .5s}
 .stabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -149,7 +150,7 @@ html.go .hero .hi{animation:up .75s cubic-bezier(.2,.7,.2,1) both;animation-dela
 #loader .la{font-size:.8rem;color:var(--mut);min-height:1.2em}
 #loader button{font:inherit;font-size:.8rem;background:none;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:5px 14px;cursor:pointer}
 @keyframes ldfill{to{width:100%}}@keyframes ldout{to{opacity:0;visibility:hidden;pointer-events:none}}
-@media (prefers-reduced-motion:reduce){#loader{display:none}}
+
 /* article pages */
 .page{max-width:760px;margin:0 auto;padding:30px 20px}.page h1{font-size:1.9rem}.page h2{margin-top:1.8em}
 table{width:100%;border-collapse:collapse;font-size:.95rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}.tl{overflow-x:auto}
@@ -223,13 +224,12 @@ document.getElementById('lskip').onclick=done})()</script>""")
 MOTION = """<script>(function(){var d=document,r=d.documentElement,rm=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 if(!r.classList.contains('go')){setTimeout(function(){r.classList.add('go')},60)}
 var bar=d.getElementById('sprog');function sp(){var h=d.documentElement.scrollHeight-innerHeight;bar.style.width=(h>0?scrollY/h*100:0)+'%'}addEventListener('scroll',sp,{passive:true});sp();
-if(rm)return;
 var els=d.querySelectorAll('main .card,.sechead,.sub,.layer,.trow,.ships,.pubs li,.chips,.stat'.replace('main ',''));
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
 els.forEach(function(el,i){if(el.closest('.hero'))return;el.classList.add('rv');el.style.transitionDelay=((i%3)*90)+'ms';io.observe(el)});
 var co=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;co.unobserve(e.target);var b=e.target,t=parseInt(b.textContent,10);if(isNaN(t))return;var s=performance.now();(function f(n){var p=Math.min(1,(n-s)/1100);b.textContent=Math.round(t*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(s)})},{threshold:.6});
 d.querySelectorAll('.stats .stat b').forEach(function(b){co.observe(b)});
-var h=d.querySelector('.hero.v2');if(h&&matchMedia('(hover:hover)').matches){h.addEventListener('pointermove',function(e){var q=h.getBoundingClientRect();h.style.setProperty('--mx',(e.clientX-q.left)+'px');h.style.setProperty('--my',(e.clientY-q.top)+'px')})}
+var h=d.querySelector('.hero.v2');if(h&&!rm&&matchMedia('(hover:hover)').matches){h.addEventListener('pointermove',function(e){var q=h.getBoundingClientRect();h.style.setProperty('--mx',(e.clientX-q.left)+'px');h.style.setProperty('--my',(e.clientY-q.top)+'px')})}
 })()</script>"""
 
 
