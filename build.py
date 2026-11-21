@@ -124,6 +124,17 @@ section{padding:34px 0}h2{font-size:1.6rem;margin:0 0 6px;letter-spacing:-.01em}
 .stack{display:flex;flex-wrap:wrap;gap:8px}.stack .tag{font-size:.88rem;padding:6px 14px}
 footer{border-top:1px solid var(--line);margin-top:30px;padding:26px 0;color:var(--mut);font-size:.9rem}
 .hide{display:none}
+.js .rv{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}.js .rv.in{opacity:1;transform:none}
+.hero .hi{opacity:0;transform:translateY(18px)}html:not(.js) .hero .hi{opacity:1;transform:none}
+html.go .hero .hi{animation:up .75s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--d,0)*.12s)}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.card{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.card:hover{transform:translateY(-5px);border-color:var(--acc);box-shadow:0 14px 34px -14px var(--glow)}
+.photo .cat{animation:bob 3.2s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-7px) rotate(-3deg)}}
+.hero.v2{--mx:70%;--my:20%;background-image:radial-gradient(520px circle at var(--mx) var(--my),var(--glow),transparent 65%)}
+#sprog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));z-index:60}
+.chip,.btn{transition:transform .2s,background .2s,border-color .2s}.btn:hover{transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){.js .rv,.hero .hi{opacity:1!important;transform:none!important;transition:none;animation:none!important}.photo .cat{animation:none}.card:hover,.btn:hover{transform:none}}
 .ships{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:18px 20px 12px;margin-top:14px}
 .sbar{height:3px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:14px}.sbar i{display:block;height:100%;width:25%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .5s}
 .stabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -202,11 +213,24 @@ if cfg["contact"]:
 
 
 LOADER = ("""<div id="loader" role="status" aria-live="polite"><div class="lt">Loading agents <b id="lc">0</b>/3</div><div class="lbar"><i></i></div><div class="la" id="la">starting...</div><button type="button" id="lskip">Skip</button></div>
-<script>(function(){var l=document.getElementById('loader');if(!l)return;try{if(sessionStorage.getItem('seen')){l.remove();return}}catch(e){}
+<script>(function(){var l=document.getElementById('loader');if(!l)return;var g=document.documentElement;setTimeout(function(){g.classList.add('go')},4600);try{if(sessionStorage.getItem('seen')){l.remove();g.classList.add('go');return}}catch(e){}
 var names=['planner ready','builder ready','checker ready'],c=document.getElementById('lc'),a=document.getElementById('la'),n=0,iv;
-function done(){clearInterval(iv);try{sessionStorage.setItem('seen','1')}catch(e){}l.style.transition='opacity .3s';l.style.opacity=0;setTimeout(function(){l.remove()},320)}
+function done(){clearInterval(iv);try{sessionStorage.setItem('seen','1')}catch(e){}g.classList.add('go');l.style.transition='opacity .3s';l.style.opacity=0;setTimeout(function(){l.remove()},320)}
 iv=setInterval(function(){if(n<3){c.textContent=++n;a.textContent=names[n-1]}else done()},900);
 document.getElementById('lskip').onclick=done})()</script>""")
+
+
+MOTION = """<script>(function(){var d=document,r=d.documentElement,rm=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+if(!r.classList.contains('go')){setTimeout(function(){r.classList.add('go')},60)}
+var bar=d.getElementById('sprog');function sp(){var h=d.documentElement.scrollHeight-innerHeight;bar.style.width=(h>0?scrollY/h*100:0)+'%'}addEventListener('scroll',sp,{passive:true});sp();
+if(rm)return;
+var els=d.querySelectorAll('main .card,.sechead,.sub,.layer,.trow,.ships,.pubs li,.chips,.stat'.replace('main ',''));
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+els.forEach(function(el,i){if(el.closest('.hero'))return;el.classList.add('rv');el.style.transitionDelay=((i%3)*90)+'ms';io.observe(el)});
+var co=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;co.unobserve(e.target);var b=e.target,t=parseInt(b.textContent,10);if(isNaN(t))return;var s=performance.now();(function f(n){var p=Math.min(1,(n-s)/1100);b.textContent=Math.round(t*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(s)})},{threshold:.6});
+d.querySelectorAll('.stats .stat b').forEach(function(b){co.observe(b)});
+var h=d.querySelector('.hero.v2');if(h&&matchMedia('(hover:hover)').matches){h.addEventListener('pointermove',function(e){var q=h.getBoundingClientRect();h.style.setProperty('--mx',(e.clientX-q.left)+'px');h.style.setProperty('--my',(e.clientY-q.top)+'px')})}
+})()</script>"""
 
 
 def shell(path, title, desc, body, schema, lang="en", article=False, og="/og.png"):
@@ -218,7 +242,7 @@ def shell(path, title, desc, body, schema, lang="en", article=False, og="/og.png
 <meta name="theme-color" content="#0c0e13"><link rel="icon" href="/assets/cat.png">
 <meta property="og:type" content="website"><meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}">
 <meta property="og:url" content="{url}"><meta property="og:image" content="{BASE}{og}"><meta name="twitter:card" content="summary_large_image">
-<style>{CSS}</style>{ld}</head><body>
+<script>document.documentElement.classList.add("js")</script><style>{CSS}</style>{ld}</head><body><div id="sprog"></div>
 <header class="top"><div class="wrap"><a class="brand" href="/"><img src="/assets/cat.png" alt="" width="30" height="30">{HANDLE}</a><nav>{nav}</nav></div></header>
 {LOADER if path == "/" else ""}{body}
 <footer><div class="wrap">© {date.today().year} {HANDLE} ({THAI}) · Updated {TODAY}</div></footer></body></html>"""
@@ -292,7 +316,7 @@ chips2 = "".join(f'<button class="chip{" on" if k == "all" else ""}" data-f="{k}
                  f'{"" if k == "all" else " " + str(more_counts.get(k, 0))}</button>' for k, v in FILTERS if k == "all" or more_counts.get(k, 0))
 marquee_items = "".join(f"<span>{html.escape(s)}</span>" for s in STACK) * 2
 meta_rows = [("Focus", "AI agents · automation"), ("Based", "Thailand"), ("Core", "Python · n8n · FastAPI"), ("Status", "Available for projects")]
-metabox = ('<div class="metabox"><span class="tagl">PROFILE</span><div class="photo"><img src="/assets/me.jpg" alt="Portrait of Nopprut Saeli" width="240" height="300"><img class="cat" src="/assets/cat.png" alt="Orange cat mascot" width="64" height="78"></div>'
+metabox = ('<div class="metabox hi" style="--d:2"><span class="tagl">PROFILE</span><div class="photo"><img src="/assets/me.jpg" alt="Portrait of Nopprut Saeli" width="240" height="300"><img class="cat" src="/assets/cat.png" alt="Orange cat mascot" width="64" height="78"></div>'
            + "".join(f'<div class="mrow"><span>{a}</span><b>{html.escape(b)}</b></div>' for a, b in meta_rows) + "</div>")
 stats = "".join(f'<div class="stat"><b>{v}</b><span>{k}</span></div>' for v, k in
                 [(len(ALL), "Projects"), (len({p["cat"] for p in ALL}), "Areas"), (2, "Security reports"), (3, "IEEE papers")])
@@ -324,11 +348,11 @@ def sec(n, title, sub, inner, sid):
 
 
 home = (f"""<section class="hero v2"><div class="wrap"><div class="hgrid"><div>
-<div class="eyebrow mono">Web portfolio / {date.today().year}</div>
-<h1>Building software that <em>takes work off your plate</em>.</h1>
-<div class="roles"><span class="role">AI agents</span><span class="role">Automation</span><span class="role">Software engineering</span></div>
-<p class="lead">Hi, I'm {HANDLE} ({THAI}) from Thailand. I build AI agents, workflow automation and data tools: LINE and Telegram bots, n8n pipelines, satellite-radar analytics and quant research tooling.</p>
-<div class="cta"><a class="btn p" href="#work">Explore my work</a><a class="btn" href="#tools">Try a live tool</a></div></div>
+<div class="eyebrow mono hi" style="--d:0">Web portfolio / {date.today().year}</div>
+<h1 class="hi" style="--d:1">Building software that <em>takes work off your plate</em>.</h1>
+<div class="roles hi" style="--d:2"><span class="role">AI agents</span><span class="role">Automation</span><span class="role">Software engineering</span></div>
+<p class="lead hi" style="--d:3">Hi, I'm {HANDLE} ({THAI}) from Thailand. I build AI agents, workflow automation and data tools: LINE and Telegram bots, n8n pipelines, satellite-radar analytics and quant research tooling.</p>
+<div class="cta hi" style="--d:4"><a class="btn p" href="#work">Explore my work</a><a class="btn" href="#tools">Try a live tool</a></div></div>
 {metabox}</div><div class="stats">{stats}</div></div></section>
 <div class="marquee" aria-hidden="true"><div class="track">{marquee_items}</div></div>
 """
@@ -345,6 +369,7 @@ home = (f"""<section class="hero v2"><div class="wrap"><div class="hgrid"><div>
 """
         + contact_html
         + """<script>document.getElementById('chips').addEventListener('click',function(e){var f=e.target.dataset.f;if(!f)return;this.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('on',c===e.target)});document.querySelectorAll('#more .card').forEach(function(c){c.classList.toggle('hide',f!=='all'&&c.dataset.cat!==f)})})</script>""")
+home = home + MOTION
 home = home.replace('<span class="n"></span>', '<span class="n">&middot;</span>')
 shell("/", f"{HANDLE} — Web portfolio: AI agents, automation & data tools",
       f"{HANDLE} ({THAI}) builds AI agents, workflow automation and data tools: LINE/Telegram bots, n8n pipelines, SAR analytics and quant research. Web portfolio and live tools.",
