@@ -124,6 +124,18 @@ section{padding:34px 0}h2{font-size:1.6rem;margin:0 0 6px;letter-spacing:-.01em}
 .stack{display:flex;flex-wrap:wrap;gap:8px}.stack .tag{font-size:.88rem;padding:6px 14px}
 footer{border-top:1px solid var(--line);margin-top:30px;padding:26px 0;color:var(--mut);font-size:.9rem}
 .hide{display:none}
+.secgrid{display:grid;grid-template-columns:1.1fr 1fr;gap:26px;margin-top:14px}
+.subh{margin:0 0 10px;font-size:1.05rem}
+.threats{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:8px}
+.threats li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.threats b{display:block;color:var(--acc2);font-size:.9rem;margin-bottom:2px}.threats span{color:var(--mut);font-size:.92rem;line-height:1.45}
+.term{background:#07090d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font:.8rem/1.7 ui-monospace,Consolas,monospace;color:#c9d3e3;overflow:auto;margin:0;white-space:pre}
+.term .c{color:#5f6b7e}.term .k{color:#7fb4ff}.term .w{color:#ff7a6b}.term .o{color:#6fdc9a}
+.tbl{width:100%;border-collapse:collapse;margin:8px 0 12px;font-size:.88rem}.tbl th,.tbl td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{color:var(--mut);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+.sev{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.75rem;font-weight:700;border:1px solid}
+.sev.critical{color:#ff7a6b;border-color:#ff7a6b}.sev.high{color:#ffb35e;border-color:#ffb35e}.sev.medium{color:#f2dc6b;border-color:#f2dc6b}
+@media(max-width:860px){.secgrid{grid-template-columns:1fr}}
 .js .rv{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}.js .rv.in{opacity:1;transform:none}
 .hero .hi{opacity:0;transform:translateY(18px)}html:not(.js) .hero .hi{opacity:1;transform:none}
 html.go .hero .hi{animation:up .75s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--d,0)*.12s)}
@@ -207,8 +219,8 @@ nav a .n{font-family:ui-monospace,Consolas,monospace;font-size:.7rem;color:var(-
 @media(max-width:760px){.hgrid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}.layers{grid-template-columns:1fr}.trow{grid-template-columns:1fr;gap:4px}}
 """
 
-NAV = [("/#work", '<span class="n">001</span>Work'), ("/#approach", '<span class="n">002</span>Approach'), ("/#ships", '<span class="n">003</span>How it ships'), ("/#toolkit", '<span class="n">004</span>Toolkit'),
-       ("/#about", '<span class="n">005</span>About'), ("/#tools", '<span class="n">006</span>Tools'), ("/guides/", "Guides (TH)")]
+NAV = [("/#work", '<span class="n">001</span>Work'), ("/#security", '<span class="n">002</span>AI security'), ("/#approach", '<span class="n">003</span>Approach'), ("/#ships", '<span class="n">004</span>How it ships'), ("/#toolkit", '<span class="n">005</span>Toolkit'),
+       ("/#about", '<span class="n">006</span>About'), ("/#tools", '<span class="n">007</span>Tools'), ("/guides/", "Guides (TH)")]
 if cfg["contact"]:
     NAV.append(("/#contact", "Contact"))
 
@@ -227,7 +239,7 @@ var bar=d.getElementById('sprog');function sp(){var h=d.documentElement.scrollHe
 var els=d.querySelectorAll('main .card,.sechead,.sub,.layer,.trow,.ships,.pubs li,.chips,.stat'.replace('main ',''));
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
 els.forEach(function(el,i){if(el.closest('.hero'))return;el.classList.add('rv');el.style.transitionDelay=((i%3)*90)+'ms';io.observe(el)});
-var co=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;co.unobserve(e.target);var b=e.target,t=parseInt(b.textContent,10);if(isNaN(t))return;var s=performance.now();(function f(n){var p=Math.min(1,(n-s)/1100);b.textContent=Math.round(t*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(s)})},{threshold:.6});
+var co=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;co.unobserve(e.target);var b=e.target,var mm=/^(\d+)(.*)$/.exec(b.textContent);if(!mm)return;var t=parseInt(mm[1],10),sf=mm[2];var s=performance.now();(function f(n){var p=Math.min(1,(n-s)/1100);b.textContent=Math.round(t*(1-Math.pow(1-p,3)))+sf;if(p<1)requestAnimationFrame(f)})(s)})},{threshold:.6});
 d.querySelectorAll('.stats .stat b').forEach(function(b){co.observe(b)});
 var h=d.querySelector('.hero.v2');if(h&&!rm&&matchMedia('(hover:hover)').matches){h.addEventListener('pointermove',function(e){var q=h.getBoundingClientRect();h.style.setProperty('--mx',(e.clientX-q.left)+'px');h.style.setProperty('--my',(e.clientY-q.top)+'px')})}
 })()</script>"""
@@ -264,7 +276,7 @@ def card(p, big=False):
 
 
 person = {"@context": "https://schema.org", "@type": "Person", "@id": f"{BASE}/#person", "name": HANDLE, "alternateName": THAI, "url": f"{BASE}/",
-          "jobTitle": "Builder of AI agents, automation and data tools", "image": f"{BASE}/assets/cat.png",
+          "jobTitle": "AI engineer (agents, automation, application security)", "image": f"{BASE}/assets/cat.png",
           "knowsAbout": ["AI agents", "workflow automation", "n8n", "LINE bots", "SAR remote sensing", "quantitative research", "Python"]}
 if cfg["sameAs"]:
     person["sameAs"] = cfg["sameAs"]
@@ -298,6 +310,11 @@ TIMELINE = [("Sep 2025 - now", "Test Engineer", "Electronics manufacturing", "De
 PUBS = [("Metaheuristic-based optimal scheduling of appliances and EV charging (IEEE OAJPE, 2026)", "https://doi.org/10.1109/OAJPE.2026.3676351"),
         ("Decentralized microgrid energy management with multi-agent deep reinforcement learning (iEECON, 2026)", "https://doi.org/10.1109/iEECON68065.2026.11707083"),
         ("Appliance scheduling with EV charging load using metaheuristics (ICPEI, 2024)", "https://doi.org/10.1109/ICPEI61831.2024.10748852")]
+_pool = FEATURED + MORE
+_by = {p["title"]: p for p in _pool}
+_order = ["Agent Invest", "LendLoop", "LINE AI Assistant for a Repair Shop", "AppSec Testing & Remediation (OWASP Juice Shop)", "Test-Eng Assist", "AI Content Factory (n8n + Python)"]
+FEATURED = [_by[t] for t in _order]
+MORE = [p for p in _pool if p["title"] not in _order]
 ALL = FEATURED + MORE
 more_counts = {k: sum(1 for p in MORE if p["cat"] == k) for k, _ in FILTERS if k != "all"}
 
@@ -315,11 +332,11 @@ CAT_NAME = dict(FILTERS)
 chips2 = "".join(f'<button class="chip{" on" if k == "all" else ""}" data-f="{k}">{html.escape(v)}'
                  f'{"" if k == "all" else " " + str(more_counts.get(k, 0))}</button>' for k, v in FILTERS if k == "all" or more_counts.get(k, 0))
 marquee_items = "".join(f"<span>{html.escape(s)}</span>" for s in STACK) * 2
-meta_rows = [("Focus", "AI agents · automation"), ("Based", "Thailand"), ("Core", "Python · n8n · FastAPI"), ("Status", "Available for projects")]
+meta_rows = [("Focus", "AI agents · AppSec"), ("Based", "Thailand"), ("Core", "Python · FastAPI · LLM"), ("Status", "Open to AI / security roles")]
 metabox = ('<div class="metabox hi" style="--d:2"><span class="tagl">PROFILE</span><div class="photo"><img src="/assets/me.jpg" alt="Portrait of Nopprut Saeli" width="240" height="300"><img class="cat" src="/assets/cat.png" alt="Orange cat mascot" width="64" height="78"></div>'
            + "".join(f'<div class="mrow"><span>{a}</span><b>{html.escape(b)}</b></div>' for a, b in meta_rows) + "</div>")
 stats = "".join(f'<div class="stat"><b>{v}</b><span>{k}</span></div>' for v, k in
-                [(len(ALL), "Projects"), (len({p["cat"] for p in ALL}), "Areas"), (2, "Security reports"), (3, "IEEE papers")])
+                [("80%+", "Manual log review cut"), ("4", "AI apps built end to end"), ("3", "Vulns found and fixed"), ("3", "IEEE papers")])
 featured_html = "".join(pcard(p, i, len(FEATURED), True) for i, p in enumerate(FEATURED, 1))
 more_html = "".join(pcard(p, i, len(MORE)) for i, p in enumerate(MORE, 1))
 approach_html = "".join(f'<div class="card"><div class="pn">0{i}</div><h3>{html.escape(a)}</h3><p>{html.escape(b)}</p></div>' for i, (a, b) in enumerate(principles, 1))
@@ -327,7 +344,7 @@ layers_html = "".join(f'<div class="card layer"><div class="num">LAYER {n}</div>
 timeline_html = "".join(f'<div class="trow"><div class="when">{w}</div><div><h3>{html.escape(t)}</h3><div class="org">{html.escape(o)}</div><p>{html.escape(d)}</p></div></div>' for w, t, o, d in TIMELINE)
 pubs_html = "".join(f'<li><a href="{u}" rel="noopener">{html.escape(t)}</a></li>' for t, u in PUBS)
 contact_html = contact.replace('<section id="contact"><div class="wrap"><h2>Work with me</h2>',
-                               '<section id="contact"><div class="wrap"><div class="sechead"><span class="n">007</span><h2>Work with me</h2></div>') if contact else ""
+                               '<section id="contact"><div class="wrap"><div class="sechead"><span class="n">008</span><h2>Work with me</h2></div>') if contact else ""
 
 
 STAGES = [("Plan", "Pin down the pain", "Write down what is slow, manual or unreliable, who approves what, and what 'done' means. Agree the smallest version worth trying.", ["Scope note", "Approval points", "Success check"]),
@@ -343,26 +360,49 @@ t.forEach(function(x,k){x.addEventListener('click',function(){auto=false;clearIn
 if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches){tm=setInterval(function(){if(auto)go((cur+1)%4)},4200)}go(0)})()</script>""")
 
 
+THREATS = [("Prompt injection", "Contain the blast radius: read-only tools by default, untrusted text kept apart from instructions."),
+           ("Excessive agency", "Human approval for anything that writes, sends or spends; a kill switch; risky actions off by default."),
+           ("Forged webhooks", "HMAC-signed requests both ways, timestamps older than 5 minutes rejected (built into LendLoop)."),
+           ("Duplicate side effects", "Idempotent handlers and retries with backoff, every attempt logged (LendLoop: 5 retries)."),
+           ("Leaked keys and cost abuse", "Keys stay server-side, rotated across several keys (LINE repair bot), rate and token limits."),
+           ("Cross-user data access", "Authorization checked on the server from the session, never from request parameters (Juice Shop fix).")]
+FINDINGS = [("Critical", "SQL injection login bypass", "Parameterised query"), ("High", "IDOR on basket API", "Ownership check from session token"), ("Medium", "SQL injection in search + verbose errors", "Parameterised query, safe error response")]
+threat_html = "".join(f'<li><b>{html.escape(a)}</b><span>{html.escape(b)}</span></li>' for a, b in THREATS)
+find_rows = "".join(f'<tr><td><span class="sev {a.lower()}">{a}</span></td><td>{html.escape(b)}</td><td>{html.escape(c)}</td></tr>' for a, b, c in FINDINGS)
+TERM = """<pre class="term" aria-label="Illustrative agent guardrail trace"><span class="c"># illustrative trace: a guarded agent step</span>
+<span class="k">agent</span>  &gt; tool_call  send_email(to="customer", body=...)
+<span class="k">policy</span> &gt; tenant=A  scope=read_only  <span class="w">BLOCKED: write action</span>
+<span class="k">policy</span> &gt; route to human approval
+<span class="k">human</span>  &gt; <span class="o">approved</span>  (logged: user, time, inputs)
+<span class="k">agent</span>  &gt; executed once  (idempotency key checked)</pre>"""
+SECURITY_HTML = (f'<div class="secgrid"><div><h3 class="subh">Threat model for a tool-calling agent</h3><ul class="threats">{threat_html}</ul>{TERM}</div>'
+                 f'<div><h3 class="subh">Hands-on: OWASP Juice Shop</h3><p class="s">A deliberately vulnerable training app on my own machine, assessed like a client engagement, then fixed and re-tested.</p>'
+                 f'<table class="tbl"><thead><tr><th>Severity</th><th>Finding</th><th>Fix</th></tr></thead><tbody>{find_rows}</tbody></table>'
+                 f'<p class="s">Exploit requests fail safely after the patch (401/403 or empty result, no stack trace) and normal login, own basket and search still work. Training app only, no real client.</p>'
+                 f'<p><a class="btn p" href="/security/report-1-juice-shop.pdf">Findings (PDF)</a> &nbsp; <a class="btn" href="/security/report-2-remediation.pdf">Remediation (PDF)</a></p></div></div>')
+
+
 def sec(n, title, sub, inner, sid):
     return f'<section id="{sid}"><div class="wrap"><div class="sechead"><span class="n">{n}</span><h2>{title}</h2></div><p class="sub">{sub}</p>{inner}</div></section>'
 
 
 home = (f"""<section class="hero v2"><div class="wrap"><div class="hgrid"><div>
 <div class="eyebrow mono hi" style="--d:0">Web portfolio / {date.today().year}</div>
-<h1 class="hi" style="--d:1">Building software that <em>takes work off your plate</em>.</h1>
-<div class="roles hi" style="--d:2"><span class="role">AI agents</span><span class="role">Automation</span><span class="role">Software engineering</span></div>
-<p class="lead hi" style="--d:3">Hi, I'm {HANDLE} ({THAI}) from Thailand. I build AI agents, workflow automation and data tools: LINE and Telegram bots, n8n pipelines, satellite-radar analytics and quant research tooling.</p>
-<div class="cta hi" style="--d:4"><a class="btn p" href="#work">Explore my work</a><a class="btn" href="#tools">Try a live tool</a></div></div>
+<h1 class="hi" style="--d:1">Building AI agents that <em>stay under control</em>.</h1>
+<div class="roles hi" style="--d:2"><span class="role">AI agents</span><span class="role">AI security</span><span class="role">Automation</span></div>
+<p class="lead hi" style="--d:3">Hi, I'm {HANDLE} ({THAI}), an AI engineer with a test-engineering background. I build agents and automation with the controls built in: least-privilege tools, human approval, signed webhooks, and tests that try to break them.</p>
+<div class="cta hi" style="--d:4"><a class="btn p" href="#work">Explore my work</a><a class="btn" href="#security">AI security work</a></div></div>
 {metabox}</div><div class="stats">{stats}</div></div></section>
 <div class="marquee" aria-hidden="true"><div class="track">{marquee_items}</div></div>
 """
-        + sec("001", "Selected work", "Six projects that show the range. Details come from the projects' own documentation.", f'<div class="grid g2">{featured_html}</div>', "work")
+        + sec("001", "Selected work", "Six projects that show the range, from agents to AppSec. Details come from each project's own documentation.", f'<div class="grid g2">{featured_html}</div>', "work")
+        + sec("002", "AI security", "Agents that call tools need controls the model cannot talk its way around. This is how I design them, and what I have tested hands-on.", SECURITY_HTML, "security")
         + sec("", "More projects", "Filter by area.", f'<div class="chips" id="chips">{chips2}</div><div class="grid g3" id="more">{more_html}</div>', "more-work")
-        + sec("002", "Approach", "Three habits that show up across the projects above.", f'<div class="grid principles">{approach_html}</div>', "approach")
-        + sec("003", "How a build ships", "Four stages I follow on every project. Click a stage; this is an illustrative walk-through of my process, not a live system.", SHIPS_HTML, "ships")
-        + sec("004", "Engineering toolkit", "Grouped by what each layer does. Taken from the projects above, not a wish list.", f'<div class="layers">{layers_html}</div>', "toolkit")
-        + sec("005", "About", "Engineer by training, builder by habit.", f'<div class="tline">{timeline_html}</div><ul class="pubs">{pubs_html}</ul>', "about")
-        + f"""<section id="tools"><div class="wrap"><div class="sechead"><span class="n">006</span><h2>Live tools</h2></div><p class="sub">Things you can open right now (Thai interface, built for online sellers).</p>
+        + sec("003", "Approach", "Three habits that show up across the projects above.", f'<div class="grid principles">{approach_html}</div>', "approach")
+        + sec("004", "How a build ships", "Four stages I follow on every project. Click a stage; this is an illustrative walk-through of my process, not a live system.", SHIPS_HTML, "ships")
+        + sec("005", "Engineering toolkit", "Grouped by what each layer does. Taken from the projects above, not a wish list.", f'<div class="layers">{layers_html}</div>', "toolkit")
+        + sec("006", "About", "Engineer by training, builder by habit.", f'<div class="tline">{timeline_html}</div><ul class="pubs">{pubs_html}</ul>', "about")
+        + f"""<section id="tools"><div class="wrap"><div class="sechead"><span class="n">007</span><h2>Live tools</h2></div><p class="sub">Things you can open right now (Thai interface, built for online sellers).</p>
 <div class="grid g2">
 <article class="card big"><h3>Shop Fee Reader</h3><div class="s">Free · Shopee, TikTok Shop, Lazada</div><p>See where each baht of a sale goes, the break-even price and break-even ROAS. Data stays in your browser.</p><p><a class="btn p" href="{FREE_TOOL}">Open the free tool</a> &nbsp; <a href="/tools/fee-reader/">Details (TH)</a></p></article>
 <article class="card big"><h3>Marketplace Fee Guide 2569</h3><div class="s">Thai article · sourced rates</div><p>Fee table for the three platforms with a worked example and an FAQ on checking unexpected deductions.</p><p><a class="btn" href="/guide/shopee-lazada-tiktok-fees-2569/">Read the guide (TH)</a></p></article></div></div></section>
@@ -371,8 +411,8 @@ home = (f"""<section class="hero v2"><div class="wrap"><div class="hgrid"><div>
         + """<script>document.getElementById('chips').addEventListener('click',function(e){var f=e.target.dataset.f;if(!f)return;this.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('on',c===e.target)});document.querySelectorAll('#more .card').forEach(function(c){c.classList.toggle('hide',f!=='all'&&c.dataset.cat!==f)})})</script>""")
 home = home + MOTION
 home = home.replace('<span class="n"></span>', '<span class="n">&middot;</span>')
-shell("/", f"{HANDLE} — Web portfolio: AI agents, automation & data tools",
-      f"{HANDLE} ({THAI}) builds AI agents, workflow automation and data tools: LINE/Telegram bots, n8n pipelines, SAR analytics and quant research. Web portfolio and live tools.",
+shell("/", f"{HANDLE} — AI engineer: secure AI agents, automation & AppSec",
+      f"{HANDLE} ({THAI}) is an AI engineer building agents and automation with security controls built in: LINE/Telegram bots, n8n pipelines, RAG assistants and hands-on AppSec (OWASP Juice Shop). Portfolio and live tools.",
       home, [person, site_ld])
 
 # ------------------------------------------------------------------ Thai product pages (target Thai search queries)
@@ -442,7 +482,10 @@ _sec_files = [
     (SECURITY_SRC / "report-02-remediation" / "Portfolio-Report-2-From-Finding-to-Fix.pdf", "report-2-remediation.pdf"),
 ]
 for src, name in _sec_files:
-    if src.exists():
+    fixed = H / "src" / "reports" / name  # regenerated with the author name filled in
+    if fixed.exists():
+        shutil.copyfile(fixed, OUT / "security" / name)
+    elif src.exists():
         shutil.copyfile(src, OUT / "security" / name)
 
 # ------------------------------------------------------------------ n8n + LINE guides (Thai)

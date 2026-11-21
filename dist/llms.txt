@@ -1,8 +1,8 @@
 # noppruts (นพรุจ)
 > Builds AI agents, workflow automation and data tools. Portfolio and live tools.
 
-- [Portfolio](https://nopprut.pages.dev/)
-- [Thai fee guide 2569](https://nopprut.pages.dev/guide/shopee-lazada-tiktok-fees-2569/)
-- [Shop fee reader tool](https://nopprut.pages.dev/tools/fee-reader/)
-- [Security findings report](https://nopprut.pages.dev/security/report-1-juice-shop.pdf)
-- [Security remediation report](https://nopprut.pages.dev/security/report-2-remediation.pdf)
+- [Portfolio](https://webportfolio.noppruts.workers.dev/)
+- [Thai fee guide 2569](https://webportfolio.noppruts.workers.dev/guide/shopee-lazada-tiktok-fees-2569/)
+- [Shop fee reader tool](https://webportfolio.noppruts.workers.dev/tools/fee-reader/)
+- [Security findings report](https://webportfolio.noppruts.workers.dev/security/report-1-juice-shop.pdf)
+- [Security remediation report](https://webportfolio.noppruts.workers.dev/security/report-2-remediation.pdf)
