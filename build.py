@@ -236,6 +236,15 @@ h1 em{background:linear-gradient(90deg,var(--acc),var(--acc2) 55%,var(--cy));-we
 @keyframes spin{to{transform:rotate(360deg)}}@keyframes scan{to{top:100%}}@keyframes ldfb{to{opacity:0;visibility:hidden;pointer-events:none}}
 @media (prefers-reduced-motion:reduce){#loader .lring::before,#loader .lscan,#loader .lag li.run i{animation:none}#loader.open .lpanel.l,#loader.open .lpanel.r{transform:none;opacity:0;transition:opacity .4s}}
 
+.walk{margin:12px 0;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025)}
+.walk summary{cursor:pointer;padding:9px 14px;font:600 13px/1 ui-monospace,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--acc);list-style:none}
+.walk summary::-webkit-details-marker{display:none}.walk summary:after{content:" +";float:right}.walk[open] summary:after{content:" \2212"}
+.wk{padding:2px 14px 12px;display:grid;gap:9px;font-size:14.5px;line-height:1.55}
+.wr{display:grid;grid-template-columns:104px 1fr;gap:10px}.wr b{color:var(--mut);font:600 12px/1.7 ui-monospace,Consolas,monospace;text-transform:uppercase;letter-spacing:.05em}
+.wr ol{margin:0;padding-left:18px}.wr li{margin:0 0 2px}
+@media(max-width:560px){.wr{grid-template-columns:1fr;gap:2px}}
+.certs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:26px}
+
 """
 
 CSS += """
@@ -395,13 +404,73 @@ ALL = FEATURED + MORE
 more_counts = {k: sum(1 for p in MORE if p["cat"] == k) for k, _ in FILTERS if k != "all"}
 
 
+
+# ------------------------------------------------------------------ walkthrough details (shown on each card so a viewer can follow along)
+# keys: why (problem), flow (ordered steps), ctrl (controls/checks), show (what to point at when presenting)
+DETAILS = {
+ "Agent Invest": dict(why="Following many symbols by hand is slow, and nobody knows whether an AI's calls were any good.",
+   flow=["Several AI agents analyse each symbol", "Predictions are stored with their timeframe", "Later prices are compared with the stored predictions", "Accuracy is tracked per timeframe on the Next.js dashboard", "A daily report is built; users ask the Telegram bot by command or natural language"],
+   ctrl="Predictions are judged against real later prices instead of trusting the model's own confidence.",
+   show="Team project: open the dashboard, then the repo linked on the card."),
+ "LendLoop": dict(why="Lending money to friends means remembering who owes what, and nagging without annoying anyone.",
+   flow=["User signs in (Clerk) and records a loan", "Convex stores the loan and due date", "n8n finds loans that need a reminder", "n8n calls the app through an HMAC-signed webhook", "The reminder goes out once; failures retry with backoff (up to 5 times)"],
+   ctrl="Signed requests, timestamps older than 5 minutes rejected, idempotent handlers so a retry never sends a second reminder.",
+   show="Built as a take-home project: show the webhook handler and the retry log in the repo."),
+ "LINE AI Assistant for a Repair Shop": dict(why="Staff lose time diagnosing faults, and customers forget their 6-month service.",
+   flow=["Staff message the LINE account with a fault code or symptom", "An LLM drafts a diagnosis for staff to use", "Staff log the completed job", "Customers link their LINE to their phone number", "A daily scheduler in the same process pushes the service reminder when due"],
+   ctrl="The AI only advises staff; customers get scheduled reminders, not free-form AI answers. Several API keys are rotated to survive rate limits.",
+   show="Show the two audiences: a staff diagnosis chat, then a customer reminder message."),
+ "AppSec Testing & Remediation (OWASP Juice Shop)": dict(why="Show I can find, fix and re-verify web vulnerabilities, not only list them.",
+   flow=["Run OWASP Juice Shop v20.2.0 locally", "Find and document 3 vulnerabilities with full requests and responses", "Patch the vulnerable code", "Replay the original exploit requests against the fix", "Confirm normal login, own basket and search still work"],
+   ctrl="Fixes use parameterised queries and a server-side ownership check from the session token; exploits now fail safely with 401/403 or an empty result and no stack trace.",
+   show="Open the two PDFs: Findings first, then Remediation with the code diff. Training app only, no real client."),
+ "Test-Eng Assist": dict(why="Test engineers dig through manuals and past failures to answer the same questions repeatedly.",
+   flow=["Ingest the engineer's own documents", "Index them for retrieval (RAG, ChromaDB)", "The agent loop picks tools and answers from the documents", "A scheduler runs recurring jobs", "Results appear in a dashboard; packaged as an executable"],
+   ctrl="Runs locally so documents stay on the machine.",
+   show="Ask a question and point to the retrieved source chunks."),
+ "AI Content Factory (n8n + Python)": dict(why="Making short vertical videos on a schedule is repetitive, but publishing blindly is risky.",
+   flow=["n8n schedules and picks a topic", "A Python factory writes the script", "Video generation and TTS voice-over", "FFmpeg assembles the 9:16 video with subtitles", "A person approves; only then does n8n publish"],
+   ctrl="A restart-safe state machine behind a local HTTP API, and nothing publishes without explicit approval.",
+   show="Walk the n8n workflow left to right, then the approval step."),
+ "SAR Crop-Damage Verification": dict(why="Insurers and lenders need defensible, parcel-level flood and crop-damage numbers.",
+   flow=["Pull open Sentinel-1 radar scenes", "Apply a rice-transplanting mask so normal wet paddy is not flagged", "Estimate flood and damage per plot", "Attach scene IDs, versions, parameters and a confidence score"],
+   ctrl="Every result is reproducible and carries its evidence for a claims dispute.", show="Flood/damage module is implemented; crop and carbon are interfaces only."),
+ "LangGraph Test-Log Triage (demo)": dict(why="Failure logs pile up and engineers read them one by one.", flow=["Read test-failure logs", "Group them by likely cause", "Draft a triage note"], ctrl="Synthetic data only.", show="Run it on the sample logs."),
+ "TypeScript SPC Analyzer (demo)": dict(why="A test line needs to notice when a process drifts.", flow=["Load measurements", "Draw control charts", "Apply out-of-control rules"], ctrl="Synthetic data only.", show="Load a sample series and trigger a rule."),
+ "Autonomous Agent Loop": dict(why="Complex tasks need planning, not one prompt.", flow=["Plan", "Split into sub-tasks", "Call tools", "Verify", "Repeat until done"], ctrl="Sandboxed workspace; multi-agent orchestrator.", show="Show one task's plan and verify steps."),
+ "Windows Computer-Control Agent": dict(why="Automate desktop apps that have no API.", flow=["Capture the screen", "Ask a vision-language model for the next action", "Run it through GUI or shell tools", "Observe the result", "Repeat until the goal is met"], ctrl="Loop stops when the goal is met.", show="Give it a small goal and watch the loop."),
+ "News Pipeline with Telegram Approval": dict(why="Automated posting needs a human gate.", flow=["Runs three times a day (Bangkok time)", "Collects items", "Sends each to a Telegram bot", "Posts only what a person approves"], ctrl="Human approval before anything goes out.", show="Show an approval message in Telegram."),
+ "LINE Slip-OCR Assistant": dict(why="Typing trade slips into a spreadsheet by hand.", flow=["Photo of the slip in LINE", "Thai + English OCR (EasyOCR)", "Flex confirmation card for the user", "Tax calculation", "Row logged to an Excel workbook that acts as the database"], ctrl="The user confirms before anything is logged.", show="Send a sample slip image."),
+ "Shop Automation Pack (n8n)": dict(why="Small shops need daily sales and order alerts without a developer.", flow=["Import the workflow into n8n", "Daily sales summary from Google Sheets to Telegram", "New-order alert with validation"], ctrl="Tested end-to-end on a local n8n with test data.", show="Import the JSON and run it."),
+ "Thai Stock Monitor": dict(why="Watch SET/mai stocks without staring at charts.", flow=["Fetch prices (yfinance)", "Generate signals from indicator thresholds", "Simulate trades in a paper portfolio", "Alert by Telegram/LINE", "Show it in a Next.js dashboard"], ctrl="Live execution deliberately not implemented.", show="Open the dashboard and the paper portfolio."),
+ "Quant Signal Engine": dict(why="Combine price and news into one disciplined signal.", flow=["Market data plus news sentiment (FinBERT/VADER)", "EMA, RSI, ATR indicators", "Kelly sizing", "Signal with dynamic stop-loss and take-profit"], ctrl="Position size comes from a formula, not a guess.", show="Print one signal with its inputs."),
+ "Algorithmic Trading Research (private)": dict(why="Most backtests flatter themselves.", flow=["Write the edge standard first", "Net-of-cost expectancy", "Out-of-sample tests and minimum sample sizes", "Regime analysis (HMM)"], ctrl="Findings are not published.", show="Describe the method only."),
+ "Character IP Studio": dict(why="Turn one character into many products.", flow=["Design the orange-cat cast", "Export LINE sticker, emoji and theme packs", "Render short films from a frame-accurate HTML engine (Playwright + FFmpeg)", "Synthesise audio normalised to -14 LUFS"], ctrl="Deterministic rendering, so a film re-renders identically.", show="Play a short film."),
+ "1-Minute Product Clip Generator": dict(why="Product clips take too long to edit.", flow=["Input: product JSON and a photo", "Thai voice-over (edge-tts)", "Compose frames with Pillow", "Assemble with FFmpeg into a vertical clip"], ctrl="No browser page is rendered per frame, which keeps it near a minute.", show="Run it on a sample product."),
+ "Shop Fee Reader (live)": dict(why="Sellers cannot see where each baht of a sale goes.", flow=["Choose platform (Shopee, TikTok Shop, Lazada)", "Enter price and costs", "See fees, break-even price and break-even ROAS"], ctrl="All data stays in the browser.", show="Open the live tool and try a sample sale."),
+ "Stock & Sales Spreadsheet": dict(why="Small shops track stock in messy sheets.", flow=["Enter stock and sales", "SUMIFS / INDEX-MATCH dashboards", "Low-stock alerts and charts"], ctrl="Every dashboard value was checked against an independent Python calculation.", show="Change a stock number and watch the dashboard."),
+}
+
+
+def walk(p, open_=False):
+    d = DETAILS.get(p["title"])
+    if not d:
+        return ""
+    steps = "".join(f"<li>{html.escape(x)}</li>" for x in d["flow"])
+    inner = (f'<div class="wk"><div class="wr"><b>Problem</b><span>{html.escape(d["why"])}</span></div>'
+             f'<div class="wr"><b>How it works</b><ol>{steps}</ol></div>'
+             f'<div class="wr"><b>Controls</b><span>{html.escape(d["ctrl"])}</span></div>'
+             f'<div class="wr"><b>When showing it</b><span>{html.escape(d["show"])}</span></div></div>')
+    return f'<details class="walk"{" open" if open_ else ""}><summary>Walkthrough</summary>{inner}</details>'
+
+
 def pcard(p, i, n, big=False):
     link_list = p.get("links") or ([p["link"]] if p.get("link") else [])
     link = ("<p>" + " &nbsp; ".join(f'<a href="{u}">{html.escape(t)} →</a>' for u, t in link_list) + "</p>") if link_list else ""
     sub = f'<div class="s">{html.escape(p["sub"])}</div>' if p.get("sub") else ""
     idx = f'<div class="idx">{i:02d} / {n:02d} · {html.escape(CAT_NAME[p["cat"]])}</div>'
     return (f'<article class="card{" big" if big else ""}" data-cat="{p["cat"]}">{idx}<h3>{html.escape(p["title"])}</h3>{sub}'
-            f'<p>{html.escape(p["body"])}</p>{link}{tags(p["tags"])}</article>')
+            f'<p>{html.escape(p["body"])}</p>{walk(p, big)}{link}{tags(p["tags"])}</article>')
 
 
 CAT_NAME = dict(FILTERS)
@@ -413,6 +482,14 @@ metabox = ('<div class="metabox hi" style="--d:2"><span class="tagl">PROFILE</sp
            + "".join(f'<div class="mrow"><span>{a}</span><b>{html.escape(b)}</b></div>' for a, b in meta_rows) + "</div>")
 stats = "".join(f'<div class="stat"><b>{v}</b><span>{k}</span></div>' for v, k in
                 [("80%+", "Manual log review cut"), ("4", "AI apps built end to end"), ("3", "Vulns found and fixed"), ("3", "IEEE papers")])
+
+CERTS = [("OPSWAT Academy", "Introduction to Critical Infrastructure Protection",
+          "Per the Credly badge page: the basic ideas behind protecting critical infrastructure, what a critical network is, and how the OPSWAT Academy certification programme is structured."),
+         ("OPSWAT Academy", "Cybersecurity Fundamentals Associate",
+          "Per the course overview (a third-party source; see the Credly page too): types of security and the technologies behind them, career paths and skills, strategies for entry-level work, and an end-of-course assessment."),
+         ("Harvard CS50", "Introduction to Artificial Intelligence with Python", "Search, knowledge, uncertainty, optimisation, machine learning, neural networks and language, taken in 2026.")]
+certs_html = '<h3 class="subh" style="margin-top:34px">Certifications</h3><div class="certs">' + "".join(
+    f'<div class="card"><div class="idx">{html.escape(a)}</div><h3>{html.escape(b)}</h3><p>{html.escape(c)}</p></div>' for a, b, c in CERTS) + "</div>"
 featured_html = "".join(pcard(p, i, len(FEATURED), True) for i, p in enumerate(FEATURED, 1))
 more_html = "".join(pcard(p, i, len(MORE)) for i, p in enumerate(MORE, 1))
 approach_html = "".join(f'<div class="card"><div class="pn">0{i}</div><h3>{html.escape(a)}</h3><p>{html.escape(b)}</p></div>' for i, (a, b) in enumerate(principles, 1))
@@ -477,7 +554,7 @@ home = (f"""<section class="hero v2"><div class="wrap"><div class="hgrid"><div>
         + sec("003", "Approach", "Three habits that show up across the projects above.", f'<div class="grid principles">{approach_html}</div>', "approach")
         + sec("004", "How a build ships", "Four stages I follow on every project. Click a stage; this is an illustrative walk-through of my process, not a live system.", SHIPS_HTML, "ships")
         + sec("005", "Engineering toolkit", "Grouped by what each layer does. Taken from the projects above, not a wish list.", f'<div class="layers">{layers_html}</div>', "toolkit")
-        + sec("006", "About", "Engineer by training, builder by habit.", f'<div class="tline">{timeline_html}</div><ul class="pubs">{pubs_html}</ul>', "about")
+        + sec("006", "About", "Engineer by training, builder by habit.", f'<div class="tline">{timeline_html}</div><ul class="pubs">{pubs_html}</ul>{certs_html}', "about")
         + f"""<section id="tools"><div class="wrap"><div class="sechead"><span class="n">007</span><h2>Live tools</h2></div><p class="sub">Things you can open right now (Thai interface, built for online sellers).</p>
 <div class="grid g2">
 <article class="card big"><h3>Shop Fee Reader</h3><div class="s">Free · Shopee, TikTok Shop, Lazada</div><p>See where each baht of a sale goes, the break-even price and break-even ROAS. Data stays in your browser.</p><p><a class="btn p" href="{FREE_TOOL}">Open the free tool</a> &nbsp; <a href="/tools/fee-reader/">Details (TH)</a></p></article>
