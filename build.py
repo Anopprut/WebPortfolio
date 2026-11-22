@@ -94,7 +94,7 @@ CSS = """
 :root{--bg:#0c0e13;--bg2:#12151c;--card:#151a23;--ink:#eef1f6;--mut:#9aa5b8;--line:#232a37;--acc:#ff8a3d;--acc2:#ffc15e;--glow:rgba(255,138,61,.18)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,"Segoe UI","Sarabun","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:var(--acc)}.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+a{color:var(--acc)}.wrap{max-width:1640px;margin:0 auto;padding:0 clamp(20px,3.4vw,64px)}
 header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
 .brand{font-weight:800;letter-spacing:.2px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
@@ -245,6 +245,9 @@ h1 em{background:linear-gradient(90deg,var(--acc),var(--acc2) 55%,var(--cy));-we
 @media(max-width:560px){.wr{grid-template-columns:1fr;gap:2px}}
 .certs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:26px}
 
+@media(min-width:1500px){body{font-size:18px}.hero h1{font-size:clamp(54px,4.6vw,84px)}.g3{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:1100px){#work .g2{grid-template-columns:repeat(3,1fr)}}
+.hgrid{gap:clamp(28px,5vw,96px)}
 """ + STORY_CSS + """
 """
 
