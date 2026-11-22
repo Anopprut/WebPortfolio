@@ -485,13 +485,14 @@ metabox = ('<div class="metabox hi" style="--d:2"><span class="tagl">PROFILE</sp
 stats = "".join(f'<div class="stat"><b>{v}</b><span>{k}</span></div>' for v, k in
                 [("80%+", "Manual log review cut"), ("4", "AI apps built end to end"), ("3", "Vulns found and fixed"), ("3", "IEEE papers")])
 
-CERTS = [("OPSWAT Academy · Issued 14 Nov 2026 · 0.50 CPE", "Introduction to Critical Infrastructure Protection",
-          "Basic ideas behind protecting critical infrastructure, what a critical network is, and how the OPSWAT Academy certification programme is structured. Valid to 14 Nov 2027.",
+CERTS = [("OPSWAT Academy · Foundational · Issued 14 Nov 2026 · 0.50 CPE", "Introduction to Critical Infrastructure Protection (ICIP)",
+          "Covers: what a critical network is, defining critical infrastructure protection (CIP), the purpose of OPSWAT Academy, and how its certificate programme is structured. Passing the final exam unlocks the later OPSWAT programmes. Valid to 14 Nov 2027.",
           "https://learn.opswatacademy.com/certificate/ekojQN1SPg", "Verify certificate"),
          ("OPSWAT Academy · Issued 15 Nov 2026 · 1.25 CPE", "Cybersecurity Fundamentals Associate (OCFA)",
-          "Per the course overview (a third-party source): types of security and the technologies behind them, career paths and skills, strategies for entry-level work, and an end-of-course assessment. Valid to 14 Nov 2027.",
+          "Covers: the difference between information security, cybersecurity and ethical hacking; cybersecurity technologies; career paths, salaries and the skills needed. The course outline also lists strategies for an entry-level role and an end-of-course assessment. Skills: cyber security, ethical hacking, OT security. Requires ICIP first. Valid to 14 Nov 2027.",
           "https://learn.opswatacademy.com/certificate/X6yY89u_nw", "Verify certificate"),
-         ("Harvard CS50 · 2026", "Introduction to Artificial Intelligence with Python", "Search, knowledge, uncertainty, optimisation, machine learning, neural networks and language.",
+         ("Harvard CS50 · 2026", "CS50's Introduction to Artificial Intelligence with Python",
+          "Seven weeks of concepts and algorithms behind modern AI, applied in Python: search, knowledge, uncertainty, optimisation, learning, neural networks and language. Covers graph search, classification, machine learning and large language models.",
           "https://cs50.harvard.edu/certificates/8d30649f-b896-4f19-80f4-7b0da1badeff", "Verify certificate")]
 certs_html = '<h3 class="subh" style="margin-top:34px">Certifications</h3><div class="certs">' + "".join(
     f'<div class="card"><div class="idx">{html.escape(a)}</div><h3>{html.escape(b)}</h3><p>{html.escape(c)}</p><p><a href="{u}" rel="noopener">{html.escape(t)} →</a></p></div>' for a, b, c, u, t in CERTS) + "</div>"
