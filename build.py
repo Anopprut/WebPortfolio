@@ -142,12 +142,22 @@ html.go .hero .hi{animation:up .75s cubic-bezier(.2,.7,.2,1) both;animation-dela
 @keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .card{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
 .card:hover{transform:translateY(-5px);border-color:var(--acc);box-shadow:0 14px 34px -14px var(--glow)}
-.photo .cat{animation:bob 3.2s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-7px) rotate(-3deg)}}
+.photo .cat{transform-origin:50% 100%;animation:catlife 4.8s ease-in-out infinite;cursor:pointer;transition:filter .2s}
+@keyframes catlife{0%,38%,100%{transform:translateY(0) rotate(0) scale(1,1)}
+44%{transform:translateY(1px) rotate(0) scale(1.07,.9)}
+52%{transform:translateY(-16px) rotate(-6deg) scale(.96,1.06)}
+60%{transform:translateY(0) rotate(0) scale(1.08,.9)}
+66%{transform:translateY(-4px) rotate(3deg) scale(1,1)}
+72%{transform:translateY(0) rotate(-3deg)}
+80%{transform:translateY(0) rotate(3deg)}
+88%{transform:translateY(0) rotate(-2deg)}}
+.photo .cat:hover{animation:cathop .55s ease-out 1;filter:drop-shadow(0 8px 16px rgba(255,140,40,.55))}
+@keyframes cathop{0%{transform:scale(1,1)}25%{transform:translateY(0) scale(1.12,.86)}55%{transform:translateY(-22px) rotate(8deg) scale(.95,1.08)}80%{transform:translateY(0) scale(1.1,.9)}100%{transform:scale(1,1)}}
 .hero.v2{--mx:70%;--my:20%;background-image:radial-gradient(520px circle at var(--mx) var(--my),var(--glow),transparent 65%)}
 #sprog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));z-index:60}
 .chip,.btn{transition:transform .2s,background .2s,border-color .2s}.btn:hover{transform:translateY(-2px)}
 @keyframes upf{from{opacity:0}to{opacity:1}}
-@media (prefers-reduced-motion:reduce){.js .rv,.hero .hi{transform:none!important}html.go .hero .hi{animation-name:upf!important}.photo .cat{animation:none}.card:hover,.btn:hover{transform:none}}
+@media (prefers-reduced-motion:reduce){.js .rv,.hero .hi{transform:none!important}html.go .hero .hi{animation-name:upf!important}.photo .cat{animation-duration:6s}.card:hover,.btn:hover{transform:none}}
 .ships{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:18px 20px 12px;margin-top:14px}
 .sbar{height:3px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:14px}.sbar i{display:block;height:100%;width:25%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .5s}
 .stabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
