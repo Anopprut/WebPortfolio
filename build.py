@@ -488,17 +488,53 @@ metabox = ('<div class="metabox hi" style="--d:2"><span class="tagl">PROFILE</sp
 stats = "".join(f'<div class="stat"><b>{v}</b><span>{k}</span></div>' for v, k in
                 [("80%+", "Manual log review cut"), ("4", "AI apps built end to end"), ("3", "Vulns found and fixed"), ("3", "IEEE papers")])
 
-CERTS = [("OPSWAT Academy · Foundational · Issued 14 Nov 2026 · 0.50 CPE", "Introduction to Critical Infrastructure Protection (ICIP)",
-          "Covers: what a critical network is, defining critical infrastructure protection (CIP), the purpose of OPSWAT Academy, and how its certificate programme is structured. Passing the final exam unlocks the later OPSWAT programmes. Valid to 14 Nov 2027.",
-          "https://learn.opswatacademy.com/certificate/ekojQN1SPg", "Verify certificate"),
-         ("OPSWAT Academy · Issued 15 Nov 2026 · 1.25 CPE", "Cybersecurity Fundamentals Associate (OCFA)",
-          "Covers: the difference between information security, cybersecurity and ethical hacking; cybersecurity technologies; career paths, salaries and the skills needed. The course outline also lists strategies for an entry-level role and an end-of-course assessment. Skills: cyber security, ethical hacking, OT security. Requires ICIP first. Valid to 14 Nov 2027.",
-          "https://learn.opswatacademy.com/certificate/X6yY89u_nw", "Verify certificate"),
-         ("Harvard CS50 · 2026", "CS50's Introduction to Artificial Intelligence with Python",
-          "Seven weeks of concepts and algorithms behind modern AI, applied in Python: search, knowledge, uncertainty, optimisation, learning, neural networks and language. Covers graph search, classification, machine learning and large language models.",
-          "https://cs50.harvard.edu/certificates/8d30649f-b896-4f19-80f4-7b0da1badeff", "Verify certificate")]
-certs_html = '<h3 class="subh" style="margin-top:34px">Certifications</h3><div class="certs">' + "".join(
-    f'<div class="card" data-href="{u}"><div class="idx">{html.escape(a)}</div><h3>{html.escape(b)}</h3><p>{html.escape(c)}</p><p><a href="{u}" rel="noopener">{html.escape(t)} →</a></p></div>' for a, b, c, u, t in CERTS) + "</div>"
+CERTS = [
+ dict(meta="OPSWAT Academy · Foundational · Issued 14 Nov 2026 · 0.50 CPE", title="Introduction to Critical Infrastructure Protection (ICIP)",
+      url="https://learn.opswatacademy.com/certificate/ekojQN1SPg",
+      studied=["What a critical network is", "Defining critical infrastructure protection (CIP)", "The purpose of OPSWAT Academy", "How the certificate programme is structured (the final exam unlocks the later courses)"],
+      why="Critical infrastructure, such as power, water and factories, cannot tolerate downtime, so security there puts availability and safety first. It is the mindset behind automation that must fail safely.",
+      uses=[("Availability first: retries with backoff, every attempt logged, and reminders that never fire twice", "LendLoop"),
+            ("Control what an automated system may touch: nothing publishes without a human approval step", "AI Content Factory (n8n + Python)"),
+            ("Least privilege for AI tools: the agent only advises, people act", "LINE AI Assistant for a Repair Shop")]),
+ dict(meta="OPSWAT Academy · Issued 15 Nov 2026 · 1.25 CPE", title="Cybersecurity Fundamentals Associate (OCFA)",
+      url="https://learn.opswatacademy.com/certificate/X6yY89u_nw",
+      studied=["How information security, cybersecurity and ethical hacking differ", "Cybersecurity types and technologies", "Career paths, salaries and the skills needed", "Strategies for an entry-level role and an end-of-course assessment (from the course outline). Skills listed: cyber security, ethical hacking, OT security. ICIP is a prerequisite."],
+      why="It gives the vocabulary and the map: what defence, testing and governance each mean, so I can place my own hands-on work in the right box.",
+      uses=[("Ethical hacking in practice: found, fixed and re-tested 3 vulnerabilities", "AppSec Testing & Remediation (OWASP Juice Shop)"),
+            ("Security technologies in a real build: signed webhooks, server-side access checks, secrets kept in environment variables", "LendLoop"),
+            ("Verifying who is calling: the LINE signature on every request, and API keys rotated against rate limits", "LINE AI Assistant for a Repair Shop")]),
+ dict(meta="Harvard CS50 · 2026", title="CS50's Introduction to Artificial Intelligence with Python",
+      url="https://cs50.harvard.edu/certificates/8d30649f-b896-4f19-80f4-7b0da1badeff",
+      studied=["Search: finding a path through a problem", "Knowledge: representing facts and reasoning with them", "Uncertainty: probability and acting on partial information", "Optimisation: finding the best option under constraints", "Learning: classification and reinforcement learning", "Neural networks", "Language: how machines process text, up to large language models"],
+      why="It is the theory behind the agents I build: how a system decides under uncertainty, learns, and handles language.",
+      uses=[("Uncertainty: judging predictions by confidence and calibration (Brier score), not only right or wrong", "Agent Invest"),
+            ("Language: an LLM that returns structured diagnoses, validated and retried", "LINE AI Assistant for a Repair Shop"),
+            ("Language and knowledge: retrieval over a user's own documents", "Test-Eng Assist"),
+            ("Search and planning: a loop that plans, calls tools, verifies and repeats", "Autonomous Agent Loop"),
+            ("Learning: the same reinforcement-learning ideas as my multi-agent microgrid paper (iEECON, 2026)", None)]),
+]
+
+
+def _sid(title):
+    return next((i for i, p in enumerate(ALL) if p["title"] == title), None)
+
+
+def _cert_card(c):
+    e = html.escape
+    st = "".join(f"<li>{e(x)}</li>" for x in c["studied"])
+    us = ""
+    for text, proj in c["uses"]:
+        sid = _sid(proj) if proj else None
+        link = f' <a class="slink" href="#story-{sid}" data-sid="{sid}">{e(proj.split(" (")[0])} →</a>' if sid is not None else ""
+        us += f"<li>{e(text)}.{link}</li>"
+    return (f'<div class="card cert" data-href="{c["url"]}"><div class="idx">{e(c["meta"])}</div><h3>{e(c["title"])}</h3>'
+            f'<h4 class="ch">What I studied</h4><ul>{st}</ul><h4 class="ch">Why it matters</h4><p>{e(c["why"])}</p>'
+            f'<h4 class="ch">Where it connects to my projects</h4><ul>{us}</ul>'
+            f'<p class="s" style="font-size:13px">Connections to work I built, not a claim that the course taught me to build it.</p>'
+            f'<p><a href="{c["url"]}" rel="noopener">Verify certificate →</a></p></div>')
+
+
+certs_html = '<h3 class="subh" style="margin-top:34px">Certifications</h3><div class="certs">' + "".join(_cert_card(c) for c in CERTS) + "</div>"
 stories_html = '<div id="stories" hidden>' + "".join(f'<div data-sid="{i}">{story_html(p, DETAILS)}</div>' for i, p in enumerate(ALL)) + '</div>'
 featured_html = "".join(pcard(p, i, len(FEATURED), True) for i, p in enumerate(FEATURED, 1))
 more_html = "".join(pcard(p, i, len(MORE)) for i, p in enumerate(MORE, 1))

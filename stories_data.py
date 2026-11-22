@@ -91,7 +91,10 @@ def story_html(p, DETAILS):
     return f'<div class="story-body"><h3>{e(p["title"])}</h3><p class="s" style="margin:0 0 4px">{e(p["body"][:0])}</p>{body}</div>'
 
 
-STORY_CSS = """.card[data-sid],.card[data-href]{cursor:pointer}
+STORY_CSS = """.ch{margin:16px 0 6px;font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+.cert ul{padding-left:18px;margin:0}.cert li{font-size:15px;line-height:1.55;margin:0 0 5px;color:#cfd6e4}.slink{white-space:nowrap;font-weight:600}
+@media(min-width:1100px){.certs{grid-template-columns:repeat(3,1fr)}}
+.card[data-sid],.card[data-href]{cursor:pointer}
 .story-btn{font-size:14px;padding:8px 14px}
 dialog#story{width:min(760px,94vw);max-height:88vh;padding:0;border:1px solid var(--line);border-radius:18px;background:#10141c;color:var(--ink);box-shadow:0 30px 80px rgba(0,0,0,.6)}
 dialog#story::backdrop{background:rgba(4,6,10,.72);backdrop-filter:blur(3px)}
@@ -106,7 +109,7 @@ dialog#story::backdrop{background:rgba(4,6,10,.72);backdrop-filter:blur(3px)}
 STORY_JS = """<dialog id="story" aria-label="Project story"><div class="sx"><button type="button" id="sclose">Close (Esc)</button></div><div id="sbody"></div></dialog>
 <script>(function(){var d=document.getElementById('story'),b=document.getElementById('sbody'),src=document.getElementById('stories');if(!d||!src||!d.showModal)return;
 function open(i){var n=src.querySelector('[data-sid="'+i+'"]');if(!n)return;b.innerHTML=n.innerHTML;d.showModal();d.scrollTop=0;try{history.replaceState(null,'','#story-'+i)}catch(e){}}
-document.addEventListener('click',function(e){var t=e.target.closest('.story-btn');if(t){open(t.dataset.sid);return}if(e.target===d){d.close();return}if(e.target.closest('a,button,summary,details,dialog'))return;var c=e.target.closest('.card[data-sid]');if(c){open(c.dataset.sid);return}c=e.target.closest('.card[data-href]');if(c){window.open(c.dataset.href,'_blank','noopener')}});
+document.addEventListener('click',function(e){var sl=e.target.closest('.slink');if(sl){e.preventDefault();open(sl.dataset.sid);return}var t=e.target.closest('.story-btn');if(t){open(t.dataset.sid);return}if(e.target===d){d.close();return}if(e.target.closest('a,button,summary,details,dialog'))return;var c=e.target.closest('.card[data-sid]');if(c){open(c.dataset.sid);return}c=e.target.closest('.card[data-href]');if(c){window.open(c.dataset.href,'_blank','noopener')}});
 document.getElementById('sclose').addEventListener('click',function(){d.close()});
 d.addEventListener('close',function(){try{history.replaceState(null,'',location.pathname+'#work')}catch(e){}});
 var m=/^#story-(\\d+)$/.exec(location.hash);if(m)setTimeout(function(){open(m[1])},50)})()</script>"""
