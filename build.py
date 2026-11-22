@@ -471,7 +471,7 @@ def pcard(p, i, n, big=False):
     sub = f'<div class="s">{html.escape(p["sub"])}</div>' if p.get("sub") else ""
     idx = f'<div class="idx">{i:02d} / {n:02d} · {html.escape(CAT_NAME[p["cat"]])}</div>'
     sid = ALL.index(p)
-    return (f'<article class="card{" big" if big else ""}" data-cat="{p["cat"]}">{idx}<h3>{html.escape(p["title"])}</h3>{sub}'
+    return (f'<article class="card{" big" if big else ""}" data-cat="{p["cat"]}" data-sid="{sid}">{idx}<h3>{html.escape(p["title"])}</h3>{sub}'
             f'<p>{html.escape(p["body"])}</p>{walk(p, big)}<p><button class="btn story-btn" type="button" data-sid="{sid}">Read the full story</button></p>{link}{tags(p["tags"])}</article>')
 
 
@@ -495,7 +495,7 @@ CERTS = [("OPSWAT Academy · Foundational · Issued 14 Nov 2026 · 0.50 CPE", "I
           "Seven weeks of concepts and algorithms behind modern AI, applied in Python: search, knowledge, uncertainty, optimisation, learning, neural networks and language. Covers graph search, classification, machine learning and large language models.",
           "https://cs50.harvard.edu/certificates/8d30649f-b896-4f19-80f4-7b0da1badeff", "Verify certificate")]
 certs_html = '<h3 class="subh" style="margin-top:34px">Certifications</h3><div class="certs">' + "".join(
-    f'<div class="card"><div class="idx">{html.escape(a)}</div><h3>{html.escape(b)}</h3><p>{html.escape(c)}</p><p><a href="{u}" rel="noopener">{html.escape(t)} →</a></p></div>' for a, b, c, u, t in CERTS) + "</div>"
+    f'<div class="card" data-href="{u}"><div class="idx">{html.escape(a)}</div><h3>{html.escape(b)}</h3><p>{html.escape(c)}</p><p><a href="{u}" rel="noopener">{html.escape(t)} →</a></p></div>' for a, b, c, u, t in CERTS) + "</div>"
 stories_html = '<div id="stories" hidden>' + "".join(f'<div data-sid="{i}">{story_html(p, DETAILS)}</div>' for i, p in enumerate(ALL)) + '</div>'
 featured_html = "".join(pcard(p, i, len(FEATURED), True) for i, p in enumerate(FEATURED, 1))
 more_html = "".join(pcard(p, i, len(MORE)) for i, p in enumerate(MORE, 1))
