@@ -72,6 +72,13 @@ STORY = {
 }
 
 
+SHOTS = {
+    "LendLoop": [("lendloop-dashboard.jpg", "Lender dashboard: incoming requests, with the automation log (notify:request_created and notify:approved, both sent by n8n) on each loan.")],
+    "AppSec Testing & Remediation (OWASP Juice Shop)": [("juice-findings.jpg", "Report 1 (findings): proof of concept for the basket IDOR, with the request, root cause and remediation."),
+                                                      ("juice-remediation.jpg", "Report 2 (remediation): the same exploit request now returns 401, and a legitimate login still returns 200.")],
+}
+
+
 def story_html(p, DETAILS):
     st = STORY.get(p["title"])
     d = DETAILS.get(p["title"])
@@ -80,7 +87,8 @@ def story_html(p, DETAILS):
         why = "".join(f"<li>{e(x)}</li>" for x in st["why"])
         pr = "".join(f'<div class="pp"><div class="pq">{e(a)}</div><div class="pa">{e(b)}</div></div>' for a, b in st["probs"])
         lim = "".join(f"<li>{e(x)}</li>" for x in st["limits"])
-        body = (f'<h4>What I built</h4><p>{e(st["what"])}</p><h4>Why it is built this way</h4><ul>{why}</ul>'
+        fig = "".join(f'<figure class="shot"><img src="/assets/shots/{f}" alt="{e(c)}" loading="lazy"><figcaption>{e(c)}</figcaption></figure>' for f, c in SHOTS.get(p["title"], []))
+        body = (f'<h4>What I built</h4><p>{e(st["what"])}</p>{fig}<h4>Why it is built this way</h4><ul>{why}</ul>'
                 f'<h4>Problems I hit and how I solved them</h4>{pr}<h4>Limits and honest caveats</h4><ul>{lim}</ul>')
     elif d:
         steps = "".join(f"<li>{e(x)}</li>" for x in d["flow"])
@@ -91,7 +99,8 @@ def story_html(p, DETAILS):
     return f'<div class="story-body"><h3>{e(p["title"])}</h3><p class="s" style="margin:0 0 4px">{e(p["body"][:0])}</p>{body}</div>'
 
 
-STORY_CSS = """.ch{margin:16px 0 6px;font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+STORY_CSS = """.shot{margin:14px 0 4px}.shot img{width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:#fff;display:block}.shot figcaption{font-size:13px;color:var(--mut);margin-top:6px}
+.ch{margin:16px 0 6px;font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
 .cert ul{padding-left:18px;margin:0}.cert li{font-size:15px;line-height:1.55;margin:0 0 5px;color:#cfd6e4}.slink{white-space:nowrap;font-weight:600}
 @media(min-width:1100px){.certs{grid-template-columns:repeat(3,1fr)}}
 .card[data-sid],.card[data-href]{cursor:pointer}

@@ -210,7 +210,7 @@ h1 em{background:linear-gradient(90deg,var(--acc),var(--acc2) 55%,var(--cy));-we
 .marquee{background:rgba(255,255,255,.02)}
 
 /* ---- loader v2: boot sequence + curtain ---- */
-#loader{position:fixed;inset:0;z-index:99;display:grid;place-items:center;font-family:ui-monospace,Consolas,monospace;color:var(--ink);animation:ldfb .4s 4.6s forwards}
+#loader{position:fixed;inset:0;z-index:99;display:grid;place-items:center;font-family:ui-monospace,Consolas,monospace;color:var(--ink);animation:ldfb .4s 3s forwards}
 #loader .lpanel{position:absolute;top:0;bottom:0;width:50.2%;background:radial-gradient(700px 500px at 50% 30%,rgba(139,123,255,.16),transparent 65%),#06080e;transition:transform .8s cubic-bezier(.77,0,.18,1)}
 #loader .lpanel.l{left:0}#loader .lpanel.r{right:0}
 #loader .lpanel::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:48px 48px}
@@ -310,9 +310,9 @@ LOADER = ("""<div id="loader" role="status" aria-live="polite"><div class="lpane
 <div class="lt">Loading agents <b id="lc">0</b>/3</div>
 <ul class="lag"><li id="ag0"><i></i>planner<span>idle</span></li><li id="ag1"><i></i>builder<span>idle</span></li><li id="ag2"><i></i>checker<span>idle</span></li></ul>
 <div class="lbar"><i id="lb"></i></div><div class="lpct" id="lp">0%</div><button type="button" id="lskip">Skip</button></div></div>
-<script>(function(){var l=document.getElementById('loader');if(!l)return;var g=document.documentElement;setTimeout(function(){g.classList.add('go')},4800);
+<script>(function(){var l=document.getElementById('loader');if(!l)return;var g=document.documentElement;setTimeout(function(){g.classList.add('go')},3200);
 try{if(sessionStorage.getItem('seen')){l.remove();g.classList.add('go');return}}catch(e){}
-var lc=document.getElementById('lc'),lb=document.getElementById('lb'),lp=document.getElementById('lp'),ag=[0,1,2].map(function(i){return document.getElementById('ag'+i)}),st=['planner online','builder online','checker online'],n=0,fin=false,t0=performance.now(),D=2700,raf;
+var lc=document.getElementById('lc'),lb=document.getElementById('lb'),lp=document.getElementById('lp'),ag=[0,1,2].map(function(i){return document.getElementById('ag'+i)}),st=['planner online','builder online','checker online'],n=0,fin=false,t0=performance.now(),D=1700,raf;
 function done(){if(fin)return;fin=true;clearInterval(raf);try{sessionStorage.setItem('seen','1')}catch(e){}g.classList.add('go');l.classList.add('open');setTimeout(function(){l.remove()},900)}
 function set(i,cls,txt){ag[i].className=cls;ag[i].lastChild.textContent=txt}
 function tick(now){var p=Math.min(1,(now-t0)/D),e=1-Math.pow(1-p,2.2);lb.style.width=(e*100)+'%';lp.textContent=Math.round(e*100)+'%';
@@ -484,7 +484,8 @@ chips2 = "".join(f'<button class="chip{" on" if k == "all" else ""}" data-f="{k}
 marquee_items = "".join(f"<span>{html.escape(s)}</span>" for s in STACK) * 2
 meta_rows = [("Focus", "AI agents · AppSec"), ("Based", "Thailand"), ("Core", "Python · FastAPI · LLM"), ("Status", "Open to AI / security roles")]
 metabox = ('<div class="metabox hi" style="--d:2"><span class="tagl">PROFILE</span><div class="photo"><img src="/assets/me.jpg" alt="Portrait of Nopprut Saeli" width="240" height="300"><img class="cat" src="/assets/cat.png" alt="Orange cat mascot" width="64" height="78"></div>'
-           + "".join(f'<div class="mrow"><span>{a}</span><b>{html.escape(b)}</b></div>' for a, b in meta_rows) + "</div>")
+           + "".join(f'<div class="mrow"><span>{a}</span><b>{html.escape(b)}</b></div>' for a, b in meta_rows)
+           + '<div class="mrow"><span>Links</span><b><a href="https://github.com/Anopprut" rel="noopener">GitHub</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/r-nopprut" rel="noopener">LinkedIn</a></b></div></div>')
 stats = "".join(f'<div class="stat"><b>{v}</b><span>{k}</span></div>' for v, k in
                 [("80%+", "Manual log review cut"), ("4", "AI apps built end to end"), ("3", "Vulns found and fixed"), ("3", "IEEE papers")])
 
@@ -505,7 +506,7 @@ CERTS = [
             ("Verifying who is calling: the LINE signature on every request, and API keys rotated against rate limits", "LINE AI Assistant for a Repair Shop")]),
  dict(meta="Harvard CS50 · 2026", title="CS50's Introduction to Artificial Intelligence with Python",
       url="https://cs50.harvard.edu/certificates/8d30649f-b896-4f19-80f4-7b0da1badeff",
-      studied=["Search: finding a path through a problem", "Knowledge: representing facts and reasoning with them", "Uncertainty: probability and acting on partial information", "Optimisation: finding the best option under constraints", "Learning: classification and reinforcement learning", "Neural networks", "Language: how machines process text, up to large language models"],
+      studied=["Search: finding a path through a problem", "Knowledge: representing facts and reasoning with them", "Uncertainty: probability and acting on partial information", "Optimisation: finding the best option under constraints", "Learning: classification and reinforcement learning", "Neural networks", "Language: how machines process text, up to large language models", "Completed all twelve course projects"],
       why="It is the theory behind the agents I build: how a system decides under uncertainty, learns, and handles language.",
       uses=[("Uncertainty: judging predictions by confidence and calibration (Brier score), not only right or wrong", "Agent Invest"),
             ("Language: an LLM that returns structured diagnoses, validated and retried", "LINE AI Assistant for a Repair Shop"),
@@ -730,6 +731,9 @@ cat = Image.open(ROOT / "films/ep02-hot-desk/assets/cat_12.png").convert("RGBA")
 cat.thumbnail((520, 640))
 cat.save(OUT / "assets" / "cat.png", optimize=True)
 from PIL import Image as _I
+(OUT/"assets"/"shots").mkdir(parents=True, exist_ok=True)
+for _f in (H/"src"/"shots").glob("*.jpg"):
+    shutil.copy(_f, OUT/"assets"/"shots"/_f.name)
 _me = _I.open(str(H / "src" / "me.jpg")).convert("RGB"); _me.thumbnail((480, 600)); _me.save(OUT / "assets" / "me.jpg", quality=88, optimize=True)
 
 sys.path.insert(0, str(ROOT / "tools"))
