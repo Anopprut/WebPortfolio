@@ -58,9 +58,8 @@ FEATURED = [
               "timeframe. Builds daily reports and talks to users through a Telegram bot by command or natural language.",
          tags=["FastAPI", "Next.js", "Telegram Bot", "Docker", "LLM agents"],
          links=[("https://github.com/nattakit2580/Agent-Invest", "Team repo on GitHub")]),
-    dict(cat="auto", title="LendLoop", sub="Loan tracking with automated, idempotent reminders",
-         body="Web app for tracking money lent to friends. Next.js and TypeScript with Clerk auth and a Convex backend; n8n sends reminders through HMAC-signed webhooks with retries and backoff, "
-              "and each reminder is idempotent so nobody is nagged twice. Built as a take-home project.",
+    dict(cat="auto", title="LendLoop", sub="Tool-lending board with signed, idempotent automation",
+         body="Neighbours list tools, request them for a date range, and lenders approve or decline. Next.js and TypeScript with Clerk auth and a Convex backend; n8n sends notifications and daily overdue reminders through HMAC-signed webhooks with retries and backoff, and each reminder is idempotent so nobody is nagged twice. Built as a take-home project.",
          tags=["Next.js", "TypeScript", "Convex", "Clerk", "n8n"],
          links=[("https://github.com/Anopprut/lendloop", "Source on GitHub")]),
     dict(cat="agents", title="Test-Eng Assist", sub="Local RAG agent for test engineers",
@@ -90,6 +89,7 @@ MORE = [
 FILTERS = [("all", "All"), ("agents", "AI agents"), ("auto", "Automation"), ("geo", "Geospatial"), ("quant", "Quant"), ("create", "Creative"), ("tools", "Tools"), ("security", "Security")]
 STACK = ["Python", "FastAPI", "Next.js", "n8n", "Docker", "PostGIS", "LINE Messaging API", "Telegram Bot API", "Playwright", "FFmpeg", "EasyOCR", "APScheduler", "Cloudflare Pages", "Excel / openpyxl"]
 
+from stories_data import STORY_CSS, STORY_JS, story_html
 CSS = """
 :root{--bg:#0c0e13;--bg2:#12151c;--card:#151a23;--ink:#eef1f6;--mut:#9aa5b8;--line:#232a37;--acc:#ff8a3d;--acc2:#ffc15e;--glow:rgba(255,138,61,.18)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
@@ -245,6 +245,7 @@ h1 em{background:linear-gradient(90deg,var(--acc),var(--acc2) 55%,var(--cy));-we
 @media(max-width:560px){.wr{grid-template-columns:1fr;gap:2px}}
 .certs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:26px}
 
+""" + STORY_CSS + """
 """
 
 CSS += """
@@ -412,8 +413,8 @@ DETAILS = {
    flow=["Several AI agents analyse each symbol", "Predictions are stored with their timeframe", "Later prices are compared with the stored predictions", "Accuracy is tracked per timeframe on the Next.js dashboard", "A daily report is built; users ask the Telegram bot by command or natural language"],
    ctrl="Predictions are judged against real later prices instead of trusting the model's own confidence.",
    show="Team project: open the dashboard, then the repo linked on the card."),
- "LendLoop": dict(why="Lending money to friends means remembering who owes what, and nagging without annoying anyone.",
-   flow=["User signs in (Clerk) and records a loan", "Convex stores the loan and due date", "n8n finds loans that need a reminder", "n8n calls the app through an HMAC-signed webhook", "The reminder goes out once; failures retry with backoff (up to 5 times)"],
+ "LendLoop": dict(why="Neighbours lending tools to each other need approvals, notifications and overdue reminders without anyone chasing by hand.",
+   flow=["A neighbour lists a tool; another requests it for a date range (Clerk sign-in)", "The lender approves or declines; Convex enforces who may do what", "Convex signs a webhook and calls n8n to notify (retries with backoff, up to 5 times)", "n8n runs daily at 09:00 and asks Convex which loans are overdue", "n8n writes each reminder back with a unique ID, so a replay never duplicates it"],
    ctrl="Signed requests, timestamps older than 5 minutes rejected, idempotent handlers so a retry never sends a second reminder.",
    show="Built as a take-home project: show the webhook handler and the retry log in the repo."),
  "LINE AI Assistant for a Repair Shop": dict(why="Staff lose time diagnosing faults, and customers forget their 6-month service.",
@@ -469,8 +470,9 @@ def pcard(p, i, n, big=False):
     link = ("<p>" + " &nbsp; ".join(f'<a href="{u}">{html.escape(t)} →</a>' for u, t in link_list) + "</p>") if link_list else ""
     sub = f'<div class="s">{html.escape(p["sub"])}</div>' if p.get("sub") else ""
     idx = f'<div class="idx">{i:02d} / {n:02d} · {html.escape(CAT_NAME[p["cat"]])}</div>'
+    sid = ALL.index(p)
     return (f'<article class="card{" big" if big else ""}" data-cat="{p["cat"]}">{idx}<h3>{html.escape(p["title"])}</h3>{sub}'
-            f'<p>{html.escape(p["body"])}</p>{walk(p, big)}{link}{tags(p["tags"])}</article>')
+            f'<p>{html.escape(p["body"])}</p>{walk(p, big)}<p><button class="btn story-btn" type="button" data-sid="{sid}">Read the full story</button></p>{link}{tags(p["tags"])}</article>')
 
 
 CAT_NAME = dict(FILTERS)
@@ -490,6 +492,7 @@ CERTS = [("OPSWAT Academy", "Introduction to Critical Infrastructure Protection"
          ("Harvard CS50", "Introduction to Artificial Intelligence with Python", "Search, knowledge, uncertainty, optimisation, machine learning, neural networks and language, taken in 2026.")]
 certs_html = '<h3 class="subh" style="margin-top:34px">Certifications</h3><div class="certs">' + "".join(
     f'<div class="card"><div class="idx">{html.escape(a)}</div><h3>{html.escape(b)}</h3><p>{html.escape(c)}</p></div>' for a, b, c in CERTS) + "</div>"
+stories_html = '<div id="stories" hidden>' + "".join(f'<div data-sid="{i}">{story_html(p, DETAILS)}</div>' for i, p in enumerate(ALL)) + '</div>'
 featured_html = "".join(pcard(p, i, len(FEATURED), True) for i, p in enumerate(FEATURED, 1))
 more_html = "".join(pcard(p, i, len(MORE)) for i, p in enumerate(MORE, 1))
 approach_html = "".join(f'<div class="card"><div class="pn">0{i}</div><h3>{html.escape(a)}</h3><p>{html.escape(b)}</p></div>' for i, (a, b) in enumerate(principles, 1))
@@ -562,7 +565,7 @@ home = (f"""<section class="hero v2"><div class="wrap"><div class="hgrid"><div>
 """
         + contact_html
         + """<script>document.getElementById('chips').addEventListener('click',function(e){var f=e.target.dataset.f;if(!f)return;this.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('on',c===e.target)});document.querySelectorAll('#more .card').forEach(function(c){c.classList.toggle('hide',f!=='all'&&c.dataset.cat!==f)})})</script>""")
-home = home + MOTION
+home = home + stories_html + STORY_JS + MOTION
 home = home.replace('<span class="n"></span>', '<span class="n">&middot;</span>')
 shell("/", f"{HANDLE} — AI engineer: secure AI agents, automation & AppSec",
       f"{HANDLE} ({THAI}) is an AI engineer building agents and automation with security controls built in: LINE/Telegram bots, n8n pipelines, RAG assistants and hands-on AppSec (OWASP Juice Shop). Portfolio and live tools.",
