@@ -1,0 +1,101 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LINE Rich Menu ผ่าน API: สร้าง อัปโหลดรูป ตั้งเมนู (n8n)</title><meta name="description" content="วิธีสร้าง Rich Menu ของ LINE ด้วย API 3 ขั้น: สร้างเมนู อัปโหลดรูปไปที่ api-data.line.me แล้วตั้งเป็นเมนูตั้งต้นหรือผูกกับผู้ใช้ พร้อม JSON ตัวอย่างและคำขอสำหรับ HTTP Request ใน n8n"><link rel="canonical" href="https://nopprut.pages.dev/guides/line-rich-menu-api-n8n/">
+<meta name="theme-color" content="#0c0e13"><link rel="icon" href="/assets/cat.png">
+<meta property="og:type" content="website"><meta property="og:title" content="LINE Rich Menu ผ่าน API: สร้าง อัปโหลดรูป ตั้งเมนู (n8n)"><meta property="og:description" content="วิธีสร้าง Rich Menu ของ LINE ด้วย API 3 ขั้น: สร้างเมนู อัปโหลดรูปไปที่ api-data.line.me แล้วตั้งเป็นเมนูตั้งต้นหรือผูกกับผู้ใช้ พร้อม JSON ตัวอย่างและคำขอสำหรับ HTTP Request ใน n8n">
+<meta property="og:url" content="https://nopprut.pages.dev/guides/line-rich-menu-api-n8n/"><meta property="og:image" content="https://nopprut.pages.dev/og.png"><meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#0c0e13;--bg2:#12151c;--card:#151a23;--ink:#eef1f6;--mut:#9aa5b8;--line:#232a37;--acc:#ff8a3d;--acc2:#ffc15e;--glow:rgba(255,138,61,.18)}
+@media (prefers-color-scheme:light){:root{--bg:#fffaf3;--bg2:#fff3e3;--card:#fff;--ink:#241810;--mut:#6d5a4a;--line:#f0dcc6;--acc:#d9531e;--acc2:#e08a1e;--glow:rgba(217,83,30,.12)}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,"Segoe UI","Sarabun","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--acc)}.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+.brand{font-weight:800;letter-spacing:.2px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand img{width:30px;height:30px;border-radius:50%;background:var(--glow);object-fit:cover}
+nav a{color:var(--mut);text-decoration:none;margin-left:20px;font-weight:600;font-size:.95rem}nav a:hover{color:var(--ink)}
+.hero{padding:64px 0 36px;background:radial-gradient(900px 380px at 78% -10%,var(--glow),transparent 70%)}
+.hero .wrap{display:grid;grid-template-columns:1.5fr 1fr;gap:28px;align-items:center}
+.eyebrow{color:var(--acc);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem}
+h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.12;margin:.35em 0 .4em;letter-spacing:-.02em}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--mut);font-size:1.1rem;max-width:34em}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;font-weight:700;text-decoration:none;border:1px solid var(--line);color:var(--ink);background:var(--card)}
+.btn.p{background:linear-gradient(90deg,var(--acc),var(--acc2));color:#1a0f06;border:0}
+.avatar{justify-self:center;width:min(300px,70vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 50% 40%,var(--glow),transparent 70%);display:grid;place-items:center}
+.avatar img{width:86%;filter:drop-shadow(0 16px 30px rgba(0,0,0,.3))}
+section{padding:34px 0}h2{font-size:1.6rem;margin:0 0 6px;letter-spacing:-.01em}.sub{color:var(--mut);margin:0 0 20px}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;transition:transform .18s,border-color .18s}
+.card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--acc) 55%,var(--line))}
+.card h3{margin:0 0 2px;font-size:1.15rem}.card .s{color:var(--acc);font-weight:600;font-size:.9rem;margin-bottom:8px}.card p{color:var(--mut);margin:.4em 0 12px;font-size:.97rem}
+.card.big{padding:24px}.card.big h3{font-size:1.3rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px}.tag{font-size:.76rem;padding:3px 10px;border-radius:99px;border:1px solid var(--line);color:var(--mut);background:var(--bg2)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.chip{cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--mut);padding:6px 14px;border-radius:99px;font:inherit;font-size:.9rem}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#1a0f06;font-weight:700}
+.principles{grid-template-columns:repeat(3,1fr)}.principles .card h3{font-size:1.02rem}
+.stack{display:flex;flex-wrap:wrap;gap:8px}.stack .tag{font-size:.88rem;padding:6px 14px}
+footer{border-top:1px solid var(--line);margin-top:30px;padding:26px 0;color:var(--mut);font-size:.9rem}
+.hide{display:none}
+/* article pages */
+.page{max-width:760px;margin:0 auto;padding:30px 20px}.page h1{font-size:1.9rem}.page h2{margin-top:1.8em}
+table{width:100%;border-collapse:collapse;font-size:.95rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}.tl{overflow-x:auto}
+details{border-bottom:1px solid var(--line);padding:9px 0}summary{cursor:pointer;font-weight:700}.note{color:var(--mut);font-size:.9rem}
+pre{background:var(--bg2);border:1px solid var(--line);padding:12px;border-radius:12px;overflow:auto;font-size:.85rem;line-height:1.5}code{font-family:ui-monospace,Consolas,monospace;font-size:.9em}.box{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:18px 0;background:var(--card)}ol li,ul li{margin:.3em 0}
+@media(max-width:760px){.hero .wrap{grid-template-columns:1fr}.avatar{order:-1;width:170px}.g2,.g3,.principles{grid-template-columns:1fr}nav a{margin-left:12px;font-size:.88rem}}
+</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "LINE Rich Menu ผ่าน API: สร้าง อัปโหลดรูป ตั้งเมนู (n8n)", "inLanguage": "th", "datePublished": "2026-10-16", "dateModified": "2026-10-16", "author": {"@id": "https://nopprut.pages.dev/#person"}, "mainEntityOfPage": "https://nopprut.pages.dev/guides/line-rich-menu-api-n8n/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "รูป Rich Menu อัปโหลดที่ไหน?", "acceptedAnswer": {"@type": "Answer", "text": "ต้องอัปโหลดไปที่โฮสต์ api-data.line.me ด้วย POST /v2/bot/richmenu/{richMenuId}/content ไม่ใช่ api.line.me ตามข้อกำหนด OpenAPI ของ LINE และต้องเป็นภาพ JPEG หรือ PNG ที่ขนาดตรงกับ Rich Menu"}}, {"@type": "Question", "name": "ตั้งเมนูให้ทุกคนหรือรายคนได้ไหม?", "acceptedAnswer": {"@type": "Answer", "text": "ได้ทั้งสองแบบ: ตั้งเป็นเมนูตั้งต้นของทุกคนด้วย /v2/bot/user/all/richmenu/{richMenuId} หรือผูกกับผู้ใช้รายคนด้วย /v2/bot/user/{userId}/richmenu/{richMenuId}"}}, {"@type": "Question", "name": "โหนดชุมชนของ n8n มี Rich Menu ไหม?", "acceptedAnswer": {"@type": "Answer", "text": "ณ วันที่ตรวจ (10 ต.ค. 2026) โค้ดโหนด n8n-nodes-line-messaging ยังไม่มีการทำงานด้าน Rich Menu จึงแนะนำให้ใช้ HTTP Request ตามตัวอย่างในบทความนี้"}}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "@id": "https://nopprut.pages.dev/#person", "name": "noppruts", "alternateName": "นพรุจ", "url": "https://nopprut.pages.dev/", "jobTitle": "Builder of AI agents, automation and data tools", "image": "https://nopprut.pages.dev/assets/cat.png", "knowsAbout": ["AI agents", "workflow automation", "n8n", "LINE bots", "SAR remote sensing", "quantitative research", "Python"], "sameAs": ["https://fastwork.co/user/nopprutdev", "https://www.facebook.com/ARutNopprut/"], "email": "r.nopprut@gmail.com"}</script></head><body>
+<header class="top"><div class="wrap"><a class="brand" href="/"><img src="/assets/cat.png" alt="" width="30" height="30">noppruts</a><nav><a href="/#work">Work</a><a href="/#tools">Tools</a><a href="/guides/">Guides (TH)</a><a href="/guide/shopee-lazada-tiktok-fees-2569/">Fee guide (TH)</a><a href="/#contact">Contact</a></nav></div></header>
+<div class="page"><h1>LINE Rich Menu ผ่าน API: สร้าง อัปโหลดรูป ตั้งเมนู (n8n)</h1>
+<p><b>คำตอบสั้น:</b> Rich Menu ทำผ่าน API ได้ 3 ขั้น: <b>สร้างเมนู → อัปโหลดรูป → ตั้งให้ใช้</b> ใน n8n ใช้โหนด HTTP Request ได้ทั้งหมด</p>
+<p class="note">ตรวจรูปแบบคำขอเมื่อ 2026-10-10 จาก <a href="https://github.com/line/line-openapi">ข้อกำหนด OpenAPI ทางการของ LINE</a> ผมยังไม่ได้ทดสอบกับ channel จริงของผู้อ่าน ให้ทดลองบน channel ทดสอบก่อน</p>
+
+<h2>ขั้น 1: สร้างเมนู</h2>
+<pre><code>POST https://api.line.me/v2/bot/richmenu
+Authorization: Bearer {Channel access token}
+Content-Type: application/json
+
+{
+  "size": { "width": 2500, "height": 843 },
+  "selected": true,
+  "name": "เมนูหลัก",
+  "chatBarText": "เมนู",
+  "areas": [
+    {
+      "bounds": { "x": 0, "y": 0, "width": 1250, "height": 843 },
+      "action": { "type": "message", "text": "สั่งซื้อ" }
+    },
+    {
+      "bounds": { "x": 1250, "y": 0, "width": 1250, "height": 843 },
+      "action": { "type": "uri", "uri": "https://example.com" }
+    }
+  ]
+}</code></pre>
+<p>ผลลัพธ์จะมี <code>richMenuId</code> ให้เก็บไว้ใช้ขั้นต่อไป ฟิลด์ <code>size, selected, name, chatBarText, areas</code> ตามที่ข้อกำหนดทางการระบุ ขนาดภาพต้องเป็นขนาดที่ LINE รองรับ (เช่น 2500×1686 หรือ 2500×843) ให้ตรวจรายการขนาดในเอกสารล่าสุด</p>
+
+<h2>ขั้น 2: อัปโหลดรูป</h2>
+<pre><code>POST https://api-data.line.me/v2/bot/richmenu/{richMenuId}/content
+Authorization: Bearer {Channel access token}
+Content-Type: image/png        (หรือ image/jpeg)
+
+(เนื้อหาเป็นไบนารีของภาพ)</code></pre>
+<p>ใน n8n ตั้ง HTTP Request ให้ส่ง Body เป็น Binary File และกำหนดส่วนหัว Content-Type ให้ตรงกับชนิดภาพ จุดที่พลาดบ่อย: ส่งไปที่ <code>api.line.me</code> แทน <code>api-data.line.me</code></p>
+
+<h2>ขั้น 3: ตั้งให้ใช้</h2>
+<ul>
+<li><b>ทุกคน:</b> <code>POST https://api.line.me/v2/bot/user/all/richmenu/{richMenuId}</code></li>
+<li><b>รายคน:</b> <code>POST https://api.line.me/v2/bot/user/{userId}/richmenu/{richMenuId}</code></li>
+<li><b>ถอนจากรายคน:</b> <code>DELETE https://api.line.me/v2/bot/user/{userId}/richmenu</code></li>
+</ul>
+
+<h2>คำสั่งที่ใช้บ่อย</h2>
+<ul>
+<li>ดูรายการ: <code>GET https://api.line.me/v2/bot/richmenu/list</code></li>
+<li>ลบเมนู: <code>DELETE https://api.line.me/v2/bot/richmenu/{richMenuId}</code></li>
+</ul>
+
+<h2>ใช้กับ n8n อย่างไรให้เป็นระบบ</h2>
+<p>ผูกเมนูตามสถานะลูกค้า เช่น ลูกค้าใหม่เห็นเมนูหนึ่ง ลูกค้าที่สั่งแล้วเห็นอีกเมนู โดยให้ workflow เรียกขั้นที่ 3 แบบรายคนเมื่อสถานะเปลี่ยน</p>
+<p class="note">ผมกำลังเสนอการทำงานด้าน Rich Menu ให้โหนดชุมชนที่กล่าวถึง (ยังไม่ได้รวมเข้าโปรเจกต์ ณ วันที่เขียน) หากรวมแล้วจะอัปเดตบทความนี้</p>
+<div class="box"><b>อยากให้ผมทำให้?</b> รับทำระบบอัตโนมัติ n8n, LINE OA / Telegram Bot และงานเชื่อมระบบสำหรับร้านค้าและทีมเล็ก <a href="https://fastwork.co/user/nopprutdev" rel="noopener">ดูบริการของผมบน Fastwork</a> ส่งโจทย์มาให้ประเมินขอบเขตและราคาก่อนจ้างได้</div><h2>คำถามที่พบบ่อย</h2><details><summary>รูป Rich Menu อัปโหลดที่ไหน?</summary><p>ต้องอัปโหลดไปที่โฮสต์ api-data.line.me ด้วย POST /v2/bot/richmenu/{richMenuId}/content ไม่ใช่ api.line.me ตามข้อกำหนด OpenAPI ของ LINE และต้องเป็นภาพ JPEG หรือ PNG ที่ขนาดตรงกับ Rich Menu</p></details><details><summary>ตั้งเมนูให้ทุกคนหรือรายคนได้ไหม?</summary><p>ได้ทั้งสองแบบ: ตั้งเป็นเมนูตั้งต้นของทุกคนด้วย /v2/bot/user/all/richmenu/{richMenuId} หรือผูกกับผู้ใช้รายคนด้วย /v2/bot/user/{userId}/richmenu/{richMenuId}</p></details><details><summary>โหนดชุมชนของ n8n มี Rich Menu ไหม?</summary><p>ณ วันที่ตรวจ (10 ต.ค. 2026) โค้ดโหนด n8n-nodes-line-messaging ยังไม่มีการทำงานด้าน Rich Menu จึงแนะนำให้ใช้ HTTP Request ตามตัวอย่างในบทความนี้</p></details><p class="note">เขียนโดย <a href="/">noppruts (นพรุจ)</a> · ตรวจข้อมูลล่าสุด 2026-10-10 · <a href="/guides/">คู่มือทั้งหมด</a></p></div>
+<footer><div class="wrap">© 2026 noppruts (นพรุจ) · Updated 2026-10-16</div></footer></body></html>

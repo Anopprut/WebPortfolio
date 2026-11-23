@@ -1,0 +1,50 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>คู่มือ n8n + LINE ภาษาไทย</title><meta name="description" content="รวมคู่มือภาษาไทยเรื่อง n8n และ LINE Messaging API: ย้ายจาก LINE Notify, Reply/Push/Multicast/Broadcast, บอตตอบอัตโนมัติ, Rich Menu และการเลือก n8n Cloud หรือโฮสต์เอง"><link rel="canonical" href="https://nopprut.pages.dev/guides/">
+<meta name="theme-color" content="#0c0e13"><link rel="icon" href="/assets/cat.png">
+<meta property="og:type" content="website"><meta property="og:title" content="คู่มือ n8n + LINE ภาษาไทย"><meta property="og:description" content="รวมคู่มือภาษาไทยเรื่อง n8n และ LINE Messaging API: ย้ายจาก LINE Notify, Reply/Push/Multicast/Broadcast, บอตตอบอัตโนมัติ, Rich Menu และการเลือก n8n Cloud หรือโฮสต์เอง">
+<meta property="og:url" content="https://nopprut.pages.dev/guides/"><meta property="og:image" content="https://nopprut.pages.dev/og.png"><meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#0c0e13;--bg2:#12151c;--card:#151a23;--ink:#eef1f6;--mut:#9aa5b8;--line:#232a37;--acc:#ff8a3d;--acc2:#ffc15e;--glow:rgba(255,138,61,.18)}
+@media (prefers-color-scheme:light){:root{--bg:#fffaf3;--bg2:#fff3e3;--card:#fff;--ink:#241810;--mut:#6d5a4a;--line:#f0dcc6;--acc:#d9531e;--acc2:#e08a1e;--glow:rgba(217,83,30,.12)}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,"Segoe UI","Sarabun","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--acc)}.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+.brand{font-weight:800;letter-spacing:.2px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand img{width:30px;height:30px;border-radius:50%;background:var(--glow);object-fit:cover}
+nav a{color:var(--mut);text-decoration:none;margin-left:20px;font-weight:600;font-size:.95rem}nav a:hover{color:var(--ink)}
+.hero{padding:64px 0 36px;background:radial-gradient(900px 380px at 78% -10%,var(--glow),transparent 70%)}
+.hero .wrap{display:grid;grid-template-columns:1.5fr 1fr;gap:28px;align-items:center}
+.eyebrow{color:var(--acc);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem}
+h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.12;margin:.35em 0 .4em;letter-spacing:-.02em}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--mut);font-size:1.1rem;max-width:34em}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;font-weight:700;text-decoration:none;border:1px solid var(--line);color:var(--ink);background:var(--card)}
+.btn.p{background:linear-gradient(90deg,var(--acc),var(--acc2));color:#1a0f06;border:0}
+.avatar{justify-self:center;width:min(300px,70vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 50% 40%,var(--glow),transparent 70%);display:grid;place-items:center}
+.avatar img{width:86%;filter:drop-shadow(0 16px 30px rgba(0,0,0,.3))}
+section{padding:34px 0}h2{font-size:1.6rem;margin:0 0 6px;letter-spacing:-.01em}.sub{color:var(--mut);margin:0 0 20px}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;transition:transform .18s,border-color .18s}
+.card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--acc) 55%,var(--line))}
+.card h3{margin:0 0 2px;font-size:1.15rem}.card .s{color:var(--acc);font-weight:600;font-size:.9rem;margin-bottom:8px}.card p{color:var(--mut);margin:.4em 0 12px;font-size:.97rem}
+.card.big{padding:24px}.card.big h3{font-size:1.3rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px}.tag{font-size:.76rem;padding:3px 10px;border-radius:99px;border:1px solid var(--line);color:var(--mut);background:var(--bg2)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.chip{cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--mut);padding:6px 14px;border-radius:99px;font:inherit;font-size:.9rem}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#1a0f06;font-weight:700}
+.principles{grid-template-columns:repeat(3,1fr)}.principles .card h3{font-size:1.02rem}
+.stack{display:flex;flex-wrap:wrap;gap:8px}.stack .tag{font-size:.88rem;padding:6px 14px}
+footer{border-top:1px solid var(--line);margin-top:30px;padding:26px 0;color:var(--mut);font-size:.9rem}
+.hide{display:none}
+/* article pages */
+.page{max-width:760px;margin:0 auto;padding:30px 20px}.page h1{font-size:1.9rem}.page h2{margin-top:1.8em}
+table{width:100%;border-collapse:collapse;font-size:.95rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}.tl{overflow-x:auto}
+details{border-bottom:1px solid var(--line);padding:9px 0}summary{cursor:pointer;font-weight:700}.note{color:var(--mut);font-size:.9rem}
+pre{background:var(--bg2);border:1px solid var(--line);padding:12px;border-radius:12px;overflow:auto;font-size:.85rem;line-height:1.5}code{font-family:ui-monospace,Consolas,monospace;font-size:.9em}.box{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:18px 0;background:var(--card)}ol li,ul li{margin:.3em 0}
+@media(max-width:760px){.hero .wrap{grid-template-columns:1fr}.avatar{order:-1;width:170px}.g2,.g3,.principles{grid-template-columns:1fr}nav a{margin-left:12px;font-size:.88rem}}
+</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "@id": "https://nopprut.pages.dev/#person", "name": "noppruts", "alternateName": "นพรุจ", "url": "https://nopprut.pages.dev/", "jobTitle": "Builder of AI agents, automation and data tools", "image": "https://nopprut.pages.dev/assets/cat.png", "knowsAbout": ["AI agents", "workflow automation", "n8n", "LINE bots", "SAR remote sensing", "quantitative research", "Python"], "sameAs": ["https://fastwork.co/user/nopprutdev", "https://www.facebook.com/ARutNopprut/"], "email": "r.nopprut@gmail.com"}</script></head><body>
+<header class="top"><div class="wrap"><a class="brand" href="/"><img src="/assets/cat.png" alt="" width="30" height="30">noppruts</a><nav><a href="/#work">Work</a><a href="/#tools">Tools</a><a href="/guides/">Guides (TH)</a><a href="/guide/shopee-lazada-tiktok-fees-2569/">Fee guide (TH)</a><a href="/#contact">Contact</a></nav></div></header>
+<div class="page"><h1>คู่มือ n8n + LINE (ภาษาไทย)</h1><p class="note">ทุกเรื่องตรวจกับเอกสารทางการ ณ 2026-10-10 และบอกชัดเจนว่าส่วนไหนยังไม่ได้ทดสอบกับบัญชีจริง</p><div class="grid g2"><div class="card"><h3 style="margin:0 0 4px"><a href="/guides/line-notify-ended-n8n-alternative/">LINE Notify เลิกให้บริการแล้ว ใช้อะไรแทนใน n8n</a></h3><p class="note" style="margin:0">LINE Notify ปิดบริการ 31 มี.ค. 2025 วิธีส่งข้อความเข้า LINE จาก n8n ต่อด้วย Messaging API: ตั้งค่า token ส่งผ่าน HTTP Request หรือโหนดชุมชน พร้อมข้อควรระวัง</p></div><div class="card"><h3 style="margin:0 0 4px"><a href="/guides/line-messaging-reply-push-multicast-broadcast/">Reply, Push, Multicast, Broadcast ของ LINE ต่างกันอย่างไร</a></h3><p class="note" style="margin:0">เปรียบเทียบ 4 วิธีส่งข้อความของ LINE Messaging API พร้อมขีดจำกัดที่เอกสารทางการระบุ (5 ข้อความต่อคำขอ, multicast สูงสุด 500 คน) และวิธีเลือกใช้ใน n8n</p></div><div class="card"><h3 style="margin:0 0 4px"><a href="/guides/n8n-cloud-or-self-host/">n8n Cloud หรือโฮสต์เอง: เลือกอย่างไร (ราคาปัจจุบันจากหน้าทางการ)</a></h3><p class="note" style="margin:0">เปรียบเทียบ n8n Cloud (Starter €20, Pro €50 ต่อเดือน จ่ายรายปี) กับ Community Edition โฮสต์เอง พร้อมคำถามที่ควรตอบก่อนเลือก ตรวจจากหน้าราคาทางการ</p></div><div class="card"><h3 style="margin:0 0 4px"><a href="/guides/n8n-line-bot-auto-reply/">สร้างบอต LINE ตอบอัตโนมัติด้วย n8n: ตั้งแต่สร้าง channel ถึงตอบกลับ</a></h3><p class="note" style="margin:0">ขั้นตอนทำบอต LINE ตอบข้อความด้วย n8n: สร้าง Messaging API channel ตั้ง webhook ตรวจลายเซ็น อ่านข้อความจาก replyToken แล้วตอบกลับ พร้อมนิพจน์ที่ใช้ได้จริง</p></div><div class="card"><h3 style="margin:0 0 4px"><a href="/guides/line-rich-menu-api-n8n/">LINE Rich Menu ผ่าน API: สร้าง อัปโหลดรูป ตั้งเมนู (n8n)</a></h3><p class="note" style="margin:0">วิธีสร้าง Rich Menu ของ LINE ด้วย API 3 ขั้น: สร้างเมนู อัปโหลดรูปไปที่ api-data.line.me แล้วตั้งเป็นเมนูตั้งต้นหรือผูกกับผู้ใช้ พร้อม JSON ตัวอย่างและคำขอสำหรับ HTTP Request ใน n8n</p></div></div><div class="box"><b>อยากให้ผมทำให้?</b> รับทำระบบอัตโนมัติ n8n, LINE OA / Telegram Bot และงานเชื่อมระบบสำหรับร้านค้าและทีมเล็ก <a href="https://fastwork.co/user/nopprutdev" rel="noopener">ดูบริการของผมบน Fastwork</a> ส่งโจทย์มาให้ประเมินขอบเขตและราคาก่อนจ้างได้</div></div>
+<footer><div class="wrap">© 2026 noppruts (นพรุจ) · Updated 2026-10-16</div></footer></body></html>

@@ -1,0 +1,58 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ตัวอ่านค่าธรรมเนียมร้านออนไลน์ — คำนวณกำไรฟรี</title><meta name="description" content="เครื่องมือฟรีบนมือถือ ดูว่าแต่ละบาทที่ขายถูกหักเป็นอะไร เหลือกำไรเท่าไร ราคาเสมอตัว ROAS เสมอตัว แก้อัตราเองได้ ข้อมูลอยู่ในเครื่องคุณ"><link rel="canonical" href="https://nopprut.pages.dev/tools/fee-reader/">
+<meta name="theme-color" content="#0c0e13"><link rel="icon" href="/assets/cat.png">
+<meta property="og:type" content="website"><meta property="og:title" content="ตัวอ่านค่าธรรมเนียมร้านออนไลน์ — คำนวณกำไรฟรี"><meta property="og:description" content="เครื่องมือฟรีบนมือถือ ดูว่าแต่ละบาทที่ขายถูกหักเป็นอะไร เหลือกำไรเท่าไร ราคาเสมอตัว ROAS เสมอตัว แก้อัตราเองได้ ข้อมูลอยู่ในเครื่องคุณ">
+<meta property="og:url" content="https://nopprut.pages.dev/tools/fee-reader/"><meta property="og:image" content="https://nopprut.pages.dev/og.png"><meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#0c0e13;--bg2:#12151c;--card:#151a23;--ink:#eef1f6;--mut:#9aa5b8;--line:#232a37;--acc:#ff8a3d;--acc2:#ffc15e;--glow:rgba(255,138,61,.18)}
+@media (prefers-color-scheme:light){:root{--bg:#fffaf3;--bg2:#fff3e3;--card:#fff;--ink:#241810;--mut:#6d5a4a;--line:#f0dcc6;--acc:#d9531e;--acc2:#e08a1e;--glow:rgba(217,83,30,.12)}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,"Segoe UI","Sarabun","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--acc)}.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+.brand{font-weight:800;letter-spacing:.2px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand img{width:30px;height:30px;border-radius:50%;background:var(--glow);object-fit:cover}
+nav a{color:var(--mut);text-decoration:none;margin-left:20px;font-weight:600;font-size:.95rem}nav a:hover{color:var(--ink)}
+.hero{padding:64px 0 36px;background:radial-gradient(900px 380px at 78% -10%,var(--glow),transparent 70%)}
+.hero .wrap{display:grid;grid-template-columns:1.5fr 1fr;gap:28px;align-items:center}
+.eyebrow{color:var(--acc);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem}
+h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.12;margin:.35em 0 .4em;letter-spacing:-.02em}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--mut);font-size:1.1rem;max-width:34em}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.btn{display:inline-block;padding:11px 20px;border-radius:12px;font-weight:700;text-decoration:none;border:1px solid var(--line);color:var(--ink);background:var(--card)}
+.btn.p{background:linear-gradient(90deg,var(--acc),var(--acc2));color:#1a0f06;border:0}
+.avatar{justify-self:center;width:min(300px,70vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 50% 40%,var(--glow),transparent 70%);display:grid;place-items:center}
+.avatar img{width:86%;filter:drop-shadow(0 16px 30px rgba(0,0,0,.3))}
+section{padding:34px 0}h2{font-size:1.6rem;margin:0 0 6px;letter-spacing:-.01em}.sub{color:var(--mut);margin:0 0 20px}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;transition:transform .18s,border-color .18s}
+.card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--acc) 55%,var(--line))}
+.card h3{margin:0 0 2px;font-size:1.15rem}.card .s{color:var(--acc);font-weight:600;font-size:.9rem;margin-bottom:8px}.card p{color:var(--mut);margin:.4em 0 12px;font-size:.97rem}
+.card.big{padding:24px}.card.big h3{font-size:1.3rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px}.tag{font-size:.76rem;padding:3px 10px;border-radius:99px;border:1px solid var(--line);color:var(--mut);background:var(--bg2)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.chip{cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--mut);padding:6px 14px;border-radius:99px;font:inherit;font-size:.9rem}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#1a0f06;font-weight:700}
+.principles{grid-template-columns:repeat(3,1fr)}.principles .card h3{font-size:1.02rem}
+.stack{display:flex;flex-wrap:wrap;gap:8px}.stack .tag{font-size:.88rem;padding:6px 14px}
+footer{border-top:1px solid var(--line);margin-top:30px;padding:26px 0;color:var(--mut);font-size:.9rem}
+.hide{display:none}
+/* article pages */
+.page{max-width:760px;margin:0 auto;padding:30px 20px}.page h1{font-size:1.9rem}.page h2{margin-top:1.8em}
+table{width:100%;border-collapse:collapse;font-size:.95rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}.tl{overflow-x:auto}
+details{border-bottom:1px solid var(--line);padding:9px 0}summary{cursor:pointer;font-weight:700}.note{color:var(--mut);font-size:.9rem}
+pre{background:var(--bg2);border:1px solid var(--line);padding:12px;border-radius:12px;overflow:auto;font-size:.85rem;line-height:1.5}code{font-family:ui-monospace,Consolas,monospace;font-size:.9em}.box{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:18px 0;background:var(--card)}ol li,ul li{margin:.3em 0}
+@media(max-width:760px){.hero .wrap{grid-template-columns:1fr}.avatar{order:-1;width:170px}.g2,.g3,.principles{grid-template-columns:1fr}nav a{margin-left:12px;font-size:.88rem}}
+</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "ตัวอ่านค่าธรรมเนียมร้านออนไลน์", "url": "https://nopprut.pages.dev/tools/fee-reader/", "applicationCategory": "BusinessApplication", "operatingSystem": "Any (web browser)", "inLanguage": "th", "description": "คำนวณกำไรหลังหักค่าธรรมเนียม Shopee, TikTok Shop, Lazada ราคาเสมอตัว และ ROAS เสมอตัว", "author": {"@id": "https://nopprut.pages.dev/#person"}, "offers": [{"@type": "Offer", "name": "ฉบับฟรี", "price": "0", "priceCurrency": "THB"}, {"@type": "Offer", "name": "ฉบับเต็ม", "price": "99", "priceCurrency": "THB"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "@id": "https://nopprut.pages.dev/#person", "name": "noppruts", "alternateName": "นพรุจ", "url": "https://nopprut.pages.dev/", "jobTitle": "Builder of AI agents, automation and data tools", "image": "https://nopprut.pages.dev/assets/cat.png", "knowsAbout": ["AI agents", "workflow automation", "n8n", "LINE bots", "SAR remote sensing", "quantitative research", "Python"], "sameAs": ["https://fastwork.co/user/nopprutdev", "https://www.facebook.com/ARutNopprut/"], "email": "r.nopprut@gmail.com"}</script></head><body>
+<header class="top"><div class="wrap"><a class="brand" href="/"><img src="/assets/cat.png" alt="" width="30" height="30">noppruts</a><nav><a href="/#work">Work</a><a href="/#tools">Tools</a><a href="/guides/">Guides (TH)</a><a href="/guide/shopee-lazada-tiktok-fees-2569/">Fee guide (TH)</a><a href="/#contact">Contact</a></nav></div></header>
+<div class="page"><h1>ตัวอ่านค่าธรรมเนียมร้านออนไลน์</h1>
+<p>เครื่องมือเว็บสำหรับผู้ขาย Shopee, TikTok Shop และ Lazada ใช้บนมือถือหรือคอมได้ทันที ไม่ต้องสมัคร ไม่ต้องติดตั้ง</p>
+<p><a class="btn p" href="https://fee-reader-free.pages.dev/">เปิดฉบับฟรี</a></p>
+<h2>ทำอะไรได้</h2><ul><li>แยกให้เห็นว่าราคาขายถูกหักเป็นคอมมิชชั่น ค่าธุรกรรม ค่าแพลตฟอร์มเท่าไร เหลือกำไรกี่บาทและกี่ %</li>
+<li>บอกราคาเสมอตัวและราคาที่ได้กำไรตามเป้า (รวมเพดานค่า Commerce Growth ของ TikTok Shop)</li><li>บอก ROAS เสมอตัว ก่อนซื้อโฆษณา</li><li>แก้อัตราเองเมื่อแพลตฟอร์มปรับค่าธรรมเนียม</li></ul>
+<h2>ฉบับฟรี และฉบับเต็ม 99 บาท</h2><div class="tl"><table><tr><th></th><th>ฟรี</th><th>เต็ม 99 บาท</th></tr>
+<tr><td>คำนวณกำไร ราคาเสมอตัว ROAS</td><td>✓</td><td>✓</td></tr><tr><td>ตั้งอัตราเอง</td><td>✓</td><td>✓</td></tr>
+<tr><td>ตรวจยอดที่ถูกหักเทียบอัตรา (แจ้งเตือนเมื่อหักเกิน)</td><td>–</td><td>✓</td></tr><tr><td>บันทึกหลายสินค้า และส่งออก CSV</td><td>–</td><td>✓</td></tr></table></div>
+<h2>ข้อจำกัด</h2><ul><li>อัตราตั้งต้นเป็นข้อมูลสาธารณะ (ดู<a href="/guide/shopee-lazada-tiktok-fees-2569/">คู่มือค่าธรรมเนียม</a>) ต้องแก้ให้ตรงกับร้านคุณ</li><li>ไม่ดึงข้อมูลจากแพลตฟอร์มอัตโนมัติ</li><li>ไม่ใช่คำแนะนำภาษีหรือบัญชี</li><li>ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้ ควรส่งออก CSV เก็บไว้</li></ul><div class="box"><b>อยากให้ผมทำให้?</b> ต้องกรอกยอดขายหรือเช็กออเดอร์ด้วยมือทุกวัน? ผมรับทำระบบสรุปยอดรายวันและแจ้งเตือนออเดอร์ใหม่ (n8n + Google Sheets + LINE/Telegram) ให้ร้านออนไลน์ <a href="https://fastwork.co/user/nopprutdev" rel="noopener">ดูบริการของผมบน Fastwork</a> ส่งโจทย์มาให้ประเมินขอบเขตและราคาก่อนจ้างได้</div></div>
+<footer><div class="wrap">© 2026 noppruts (นพรุจ) · Updated 2026-10-16</div></footer></body></html>

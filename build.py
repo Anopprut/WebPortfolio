@@ -485,7 +485,7 @@ marquee_items = "".join(f"<span>{html.escape(s)}</span>" for s in STACK) * 2
 meta_rows = [("Focus", "AI agents · AppSec"), ("Based", "Thailand"), ("Core", "Python · FastAPI · LLM"), ("Status", "Open to AI / security roles")]
 metabox = ('<div class="metabox hi" style="--d:2"><span class="tagl">PROFILE</span><div class="photo"><img src="/assets/me.jpg" alt="Portrait of Nopprut Saeli" width="240" height="300"><img class="cat" src="/assets/cat.png" alt="Orange cat mascot" width="64" height="78"></div>'
            + "".join(f'<div class="mrow"><span>{a}</span><b>{html.escape(b)}</b></div>' for a, b in meta_rows)
-           + '<div class="mrow"><span>Links</span><b><a href="https://github.com/Anopprut" rel="noopener">GitHub</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/r-nopprut" rel="noopener">LinkedIn</a></b></div></div>')
+           + '<div class="mrow"><span>Links</span><b><a href="https://github.com/Anopprut" rel="noopener">GitHub</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/r-nopprut" rel="noopener">LinkedIn</a></b></div><div class="mrow"><span>Resume</span><b><a href="/files/Nopprut_Saeli_Resume.pdf" download>Download PDF</a></b></div></div>')
 stats = "".join(f'<div class="stat"><b>{v}</b><span>{k}</span></div>' for v, k in
                 [("80%+", "Manual log review cut"), ("4", "AI apps built end to end"), ("3", "Vulns found and fixed"), ("3", "IEEE papers")])
 
@@ -732,6 +732,9 @@ cat.thumbnail((520, 640))
 cat.save(OUT / "assets" / "cat.png", optimize=True)
 from PIL import Image as _I
 (OUT/"assets"/"shots").mkdir(parents=True, exist_ok=True)
+(OUT/"files").mkdir(parents=True, exist_ok=True)
+for _f in (H/"src"/"files").glob("*.pdf"):
+    shutil.copy(_f, OUT/"files"/_f.name)
 for _f in (H/"src"/"shots").glob("*.jpg"):
     shutil.copy(_f, OUT/"assets"/"shots"/_f.name)
 _me = _I.open(str(H / "src" / "me.jpg")).convert("RGB"); _me.thumbnail((480, 600)); _me.save(OUT / "assets" / "me.jpg", quality=88, optimize=True)
